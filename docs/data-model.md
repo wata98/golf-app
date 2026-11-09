@@ -34,6 +34,7 @@
 | `distanceRecentOnly` | 飛距離の集計を直近90日だけにするか（初期値 `false`） |
 | `elevationUp` / `elevationDown` | 早見表の高低差の補正。1mにつき何ヤード足す（打ち上げ）・引く（打ち下ろし）か（初期値 `1.0`） |
 | `lastDistancePlace` | 飛距離の記録で前回選んだ場所 |
+| `targetScore` | 弱点分析の目標スコア（パー72のコースでのスコア。初期値 `100`） |
 
 - まだ保存していない項目は `js/features/settings/settings-store.js` の初期値を使う（項目を足しても移行は要らない）
 

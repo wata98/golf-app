@@ -1,22 +1,7 @@
-// 飛距離の推移グラフ（Chart.js を使う）。
-// Chart.js は vendor/ に同梱しているので圏外でも動く。必要になったときだけ読み込む
+// 飛距離の推移グラフ（Chart.js を使う）
 
 import { dailyAverages } from './distance-stats.js';
-
-let loading = null;
-function loadChartJs() {
-  if (window.Chart) return Promise.resolve(window.Chart);
-  if (!loading) {
-    loading = new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = 'vendor/chart.umd.min.js';
-      s.onload = () => resolve(window.Chart);
-      s.onerror = () => reject(new Error('グラフの部品を読み込めませんでした。'));
-      document.head.appendChild(s);
-    });
-  }
-  return loading;
-}
+import { loadChartJs } from '../../ui/chart-loader.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 

@@ -122,8 +122,13 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
   - `distance-stats.js` 集計（平均・中央値・ばらつき・90日） / `club-finder.js` 早見表の計算（高低差の補正・近いクラブ）
   - `distance-entry-view.js` 記録（「ラウンド前」タブ） / `distance-review-view.js` 集計表とグラフ（「振り返り」）
   - `distance-chart.js` 推移グラフ / `finder-dialog.js` 番手早見表 / `finder-settings-view.js` 補正の係数（設定）
+- `js/features/analysis/` 機能3 弱点分析（「振り返り」タブの「分析」）
+  - **`analysis-rules.js` 判定のルール（失点の数え方・目安の表・課題の決め方・理由の文章）。ユーザーが自分で読んで変える前提なので、ルールはここだけに置き、日本語のコメントを保つ**
+  - `analysis-metrics.js` 指標の計算（期間の選び方・18ホール換算・パー別） / `analysis-view.js` 画面 / `analysis-chart.js` 推移グラフ
+  - `target-settings-view.js` 目標スコア（設定タブ）
+- `js/ui/chart-loader.js` グラフの部品（Chart.js）の読み込み
 - `js/features/settings/settings-store.js` 設定の読み書きと初期値
 - `vendor/` 同梱しているライブラリ（書き換えない）
 - `js/features/<機能名>/` これから足す機能はここに1フォルダずつ
-- `tests/` 自動テスト（`*.test.js`）
+- `tests/` 自動テスト（`*.test.js`。`helpers.js` はテスト用の小道具）
 - `tools/` 開発用の道具（アプリには含まれない）

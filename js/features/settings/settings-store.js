@@ -16,6 +16,8 @@ export const DEFAULT_SETTINGS = {
   elevationDown: DEFAULT_ELEVATION_DOWN,
   // 飛距離の記録で前回選んだ場所
   lastDistancePlace: 'range',
+  // 弱点分析の目標スコア（パー72のコースでのスコア）
+  targetScore: 100,
 };
 
 export async function getSettings() {

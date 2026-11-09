@@ -7,21 +7,23 @@ import { listFinishedRounds, getRound, deleteRound } from '../round/round-store.
 import { summaryTable } from '../round/summary-view.js';
 import { renderHoleView } from '../round/hole-view.js';
 import { renderDistanceReview } from '../distance/distance-review-view.js';
+import { renderAnalysis } from '../analysis/analysis-view.js';
 
 export function setupReviewTab(root) {
-  let mode = 'rounds'; // 'rounds'（ラウンド）/ 'distance'（飛距離）
+  let mode = 'rounds'; // 'rounds'（ラウンド）/ 'distance'（飛距離）/ 'analysis'（分析）
+  const MODES = [['rounds', 'ラウンド'], ['distance', '飛距離'], ['analysis', '分析']];
 
-  // 上の切り替え（ラウンド / 飛距離）と、その中身
+  // 上の切り替え（ラウンド / 飛距離 / 分析）と、その中身
   async function show(message = '') {
     root.innerHTML = `
-      <div class="choices cols-2 review-switch">
-        <button type="button" class="choice" data-mode="rounds" aria-pressed="${mode === 'rounds'}">ラウンド</button>
-        <button type="button" class="choice" data-mode="distance" aria-pressed="${mode === 'distance'}">飛距離</button>
+      <div class="choices cols-3 review-switch">
+        ${MODES.map(([v, l]) => `<button type="button" class="choice" data-mode="${v}" aria-pressed="${mode === v}">${l}</button>`).join('')}
       </div>
       <div id="review-body"></div>`;
     root.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => { mode = b.dataset.mode; show(); }));
     const body = root.querySelector('#review-body');
     if (mode === 'distance') await renderDistanceReview(body);
+    else if (mode === 'analysis') await renderAnalysis(body);
     else await showRounds(body, message);
   }
 
