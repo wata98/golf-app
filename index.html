@@ -2,6 +2,11 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <!-- 安全のための決まり（Content Security Policy）: このサイト自身のファイルだけを動かす。
+       通信してよい先 = 楽天GORAのAPI（空き確認）、画像を読んでよい先 = 国土地理院の地図。
+       'wasm-unsafe-eval' は骨格推定（MediaPipe）の計算部品を動かすのに必要。
+       外部のサービスを足すときは、ここにも足す（docs/保守ガイド.md）。 -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cyberjapandata.gsi.go.jp; connect-src 'self' https://openapi.rakuten.co.jp; media-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'">
   <!-- viewport-fit=cover: iPhoneの画面の端（丸い角・下のバー）まで使う -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b5d1e">

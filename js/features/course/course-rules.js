@@ -13,7 +13,7 @@
 
 import { probBetween } from './course-math.js';
 import { describe } from '../distance/distance-stats.js';
-import { describeHazard } from './hazard-model.js';
+import { describeHazard, aimLabel } from './hazard-model.js';
 
 export const LIMIT_OB_WATER = 0.10;   // OB・池に入る確率の基準（これ以下なら使う）
 export const LIMIT_BUNKER = 0.30;     // バンカーに入る確率の基準
@@ -165,5 +165,5 @@ export function suggestTeeShot(hole, hazards, profiles, sides) {
   }
   const aim = decideAim(chosen, sides);
   lines.push(aim.text + '。', sides.note + '。', ...greenNotes);
-  return { status: 'ok', club: chosen.profile.club, aim: aim.aim, remaining, lines, short: `${name}・${{ left: '左寄り', center: '中央', right: '右寄り' }[aim.aim]}・残り${remaining}y` };
+  return { status: 'ok', club: chosen.profile.club, aim: aim.aim, remaining, lines, short: `${name}・${aimLabel(aim.aim)}・残り${remaining}y` };
 }

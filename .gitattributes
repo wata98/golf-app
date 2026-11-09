@@ -1,0 +1,8 @@
+# 同梱ライブラリとモデルは、git に改行を変換させない（変換すると中身が変わり、tests/vendor.test.js の指紋が合わなくなる）
+vendor/** -text
+*.wasm binary
+*.task binary
+*.png binary
+
+# Windows のバッチファイルは CRLF の改行でないと正しく動かない
+*.bat text eol=crlf

@@ -50,7 +50,7 @@ export async function renderPlanList(root, message = '') {
           const p = planFor(h, note, ctx);
           const hz = (note?.hazards ?? []).map(describeHazard).join('・');
           return `<li><button type="button" class="round-item plan-row" data-hole="${h.number}">
-            <span><b>${h.number}番</b> パー${h.par}${h.yards ? ` ${h.yards}y` : ''}<br><span class="plan-short">${esc(p.short)}${p.manual ? '<span class="tag">手直し済み</span>' : ''}</span>${hz ? `<br><span class="small">${esc(hz)}</span>` : ''}</span>
+            <span><b>${esc(h.number)}番</b> パー${esc(h.par)}${h.yards ? ` ${esc(h.yards)}y` : ''}<br><span class="plan-short">${esc(p.short)}${p.manual ? '<span class="tag">手直し済み</span>' : ''}</span>${hz ? `<br><span class="small">${esc(hz)}</span>` : ''}</span>
           </button></li>`;
         }).join('')}
       </ul>`;

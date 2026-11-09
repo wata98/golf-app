@@ -91,7 +91,7 @@ function holeTable(round) {
     const entered = isEntered(h);
     return `
       <tr>
-        <td>${h.number}</td><td>${h.par}</td>
+        <td>${esc(h.number)}</td><td>${esc(h.par)}</td>
         <td><b>${entered ? h.strokes : '−'}</b></td>
         <td>${entered ? h.putts : '−'}</td>
         <td>${teeShotShort(h.teeShot)}</td>

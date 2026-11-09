@@ -5,7 +5,7 @@
 //   上げないと、スマホに古いファイルが残ったままになる。
 // ★ファイルを足したら APP_FILES にも足す（テストで確かめている）。
 
-const APP_VERSION = '0.8.0';
+const APP_VERSION = '0.8.1';
 const CACHE_NAME = 'golf-app-' + APP_VERSION;
 
 const APP_FILES = [

@@ -27,7 +27,7 @@ export async function renderHolePlan(root, args) {
       <button type="button" class="chip" id="hp-back">◀ 一覧</button>
       <span class="hole-no" style="margin-left:auto">${holeNumber}番</span>
     </div>
-    <p>${esc(course.name)}（${esc(teeName)}）パー${hole.par}${hole.yards ? `・${hole.yards}y` : '・距離未登録'}</p>
+    <p>${esc(course.name)}（${esc(teeName)}）パー${esc(hole.par)}${hole.yards ? `・${esc(hole.yards)}y` : '・距離未登録'}</p>
 
     <div class="weakness plan-box">
       <div class="small">${p.manual ? '手直ししたプラン' : '自動の提案'}</div>

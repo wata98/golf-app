@@ -34,7 +34,7 @@ export async function renderAvailability(root) {
     root.innerHTML = `
       <h2>ゴルフ場の空き確認</h2>
       <p class="small">予約はしません。空きを見て、予約は各サイトのページで自分でします。</p>
-      <label class="field">日付（ここから）<input type="date" id="av-date" min="${today}" value="${cond.startDate}"></label>
+      <label class="field">日付（ここから）<input type="date" id="av-date" min="${today}" value="${esc(cond.startDate)}"></label>
       <div class="choices cols-3">${[1, 2, 3].map((d) => toggle('days', d, cond.days === d, `${d}日間`)).join('')}</div>
       <h3>人数</h3>
       <div class="choices cols-4">${[1, 2, 3, 4].map((n) => toggle('players', n, cond.players === n, `${n}人`)).join('')}</div>

@@ -19,7 +19,7 @@ export async function openFinderDialog(remaining = null) {
   dialog.innerHTML = `
     <h2>番手早見表</h2>
     <label class="field">残り距離（ヤード）
-      <input type="number" inputmode="numeric" data-remaining value="${remaining ?? ''}">
+      <input type="number" inputmode="numeric" data-remaining value="${esc(remaining ?? '')}">
     </label>
     <label class="field">高低差（メートル・入れたときだけ補正）
       <input type="number" inputmode="decimal" data-elev placeholder="例: 5">

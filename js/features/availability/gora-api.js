@@ -66,7 +66,8 @@ export function parseResponse(json, players) {
       if (players < min || players > max) continue;
       const cals = asArray(plan.calInfo ?? plan.callInfo).map((c) => unwrap(c, 'call') ?? c);
       for (const cal of cals.length ? cals : [{}]) {
-        const url = cal.reservePageUrlMobile || cal.reservePageUrlPC || course.reserveCalUrlMobile || course.reserveCalUrlPC;
+        // 予約ページのURL。安全のため https:// で始まるものだけを使う（ほかの形のリンクは開かない）
+        const url = [cal.reservePageUrlMobile, cal.reservePageUrlPC, course.reserveCalUrlMobile, course.reserveCalUrlPC].find(isWebUrl);
         if (!url) throw shapeError('reservePageUrlMobile（予約ページのURL）');
         rows.push({
           courseId: course.golfCourseId, courseName: course.golfCourseName, prefecture: course.prefecture ?? '',
@@ -80,6 +81,8 @@ export function parseResponse(json, players) {
   }
   return { rows, page: Number(json.page) || 1, pageCount: Number(json.pageCount) || 1, count: Number(json.count) || 0 };
 }
+
+const isWebUrl = (u) => typeof u === 'string' && /^https:\/\//.test(u);
 
 function shapeError(field) {
   return new GoraError('shape', `楽天の返事の形が変わったようです（${field} がありません）。docs/availability-troubleshooting.md を見てください。`);

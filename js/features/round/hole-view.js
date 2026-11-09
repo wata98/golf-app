@@ -41,7 +41,7 @@ export function renderHoleView(root, round, opts) {
         </div>
         <div class="hole-title">
           <span class="hole-no">${h.number}番</span>
-          <button type="button" class="chip" data-act="edit-hole">パー${h.par}${h.yards ? `・${h.yards}y` : ''} ✎</button>
+          <button type="button" class="chip" data-act="edit-hole">パー${esc(h.par)}${h.yards ? `・${esc(h.yards)}y` : ''} ✎</button>
           <button type="button" class="chip" data-act="menu">${opts.mode === 'edit' ? '修正を終える' : 'メニュー'}</button>
         </div>
       </div>

@@ -60,7 +60,7 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
 - ラウンド中は、手袋をした片手でも押せる大きいボタン（目安: 縦横60px以上、間隔を空ける）
 - 1打の記録は数タップで終わること
 - 空き確認以外はオフライン（圏外）でも動くこと。ゴルフ場は電波が弱い前提
-- 入力ミスはすぐ取り消せるようにする（「1つ戻す」ボタン）
+- 入力ミスはすぐ直せるようにする（今は「−」ボタンや前のホールに戻って直す形。専用の「1つ戻す」ボタンは作っていない）
 
 ## 作業の進め方
 1. 新しい機能を作る前に、計画を箇条書きで示して承認を待つ
@@ -90,7 +90,8 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
 - データの形は `docs/data-model.md` に従う
 
 ## コマンド
-- テスト: `node --test`（Node.jsは `C:\Program Files\nodejs\`。PATHが通らないときは `& "C:\Program Files\nodejs\node.exe" --test`）
+- テスト: `run-tests.bat` をダブルクリック、または `node --test`（Node.jsは `C:\Program Files\nodejs\`。PATHが通らないときは `& "C:\Program Files\nodejs\node.exe" --test`）
+- 同梱ライブラリが記録どおりかは `tests/vendor.test.js` が指紋（SHA-256）で確かめる（表は `vendor/README.md`）
 - パソコンで開く: `start-local.bat` をダブルクリック → http://localhost:8000
   （中身は `%LOCALAPPDATA%\Programs\Python\Python312\python.exe -m http.server 8000 --bind 127.0.0.1`。
   index.html を直接ダブルクリックで開くと、モジュールとService Workerが動かない）
@@ -100,6 +101,9 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
 ## 更新するときの決まり
 - アプリを更新したら、`js/version.js` と `sw.js` の `APP_VERSION` を同じ番号で上げる（上げないとスマホに古い版が残る）
 - ファイルを足したら `sw.js` の `APP_FILES` に足す（どちらもテストで確かめている）
+- 外部の住所への通信・画像を足すときは、`index.html` の CSP（Content-Security-Policy）にも足す
+- `.bat` ファイルは CRLF の改行で保存する（`.gitattributes` で指定済み）
+- 利用者向けの説明: `README.md`、保守の手引き: `docs/保守ガイド.md`、AIへの相談用の説明文: `docs/AIに相談するとき.md`。機能を変えたらこれらも直す
 - 番号の上げ方: 機能を足したら真ん中（0.1.0→0.2.0）、直しだけなら最後（0.1.0→0.1.1）
 
 ## 構成

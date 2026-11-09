@@ -17,8 +17,8 @@ export function renderDrillEdit(root, original, { isNew, onDone }) {
     <label class="field">やり方<textarea id="de-how" rows="4" class="memo-box">${esc(d.how)}</textarea></label>
     <label class="field">意識するポイント<textarea id="de-points" rows="3" class="memo-box">${esc(d.points)}</textarea></label>
     <div class="dist-inputs">
-      <label class="field">球数の目安<input type="number" inputmode="numeric" id="de-balls" value="${d.balls}"></label>
-      <label class="field">時間の目安（分）<input type="number" inputmode="numeric" id="de-minutes" value="${d.minutes}"></label>
+      <label class="field">球数の目安<input type="number" inputmode="numeric" id="de-balls" value="${esc(d.balls)}"></label>
+      <label class="field">時間の目安（分）<input type="number" inputmode="numeric" id="de-minutes" value="${esc(d.minutes)}"></label>
     </div>
     <h3>できる場所（いくつでも）</h3>
     <div class="choices cols-3" id="de-places"></div>

@@ -1,6 +1,6 @@
 // ドリル集と練習の記録の読み書き（スマホの中の保存場所）
 
-import { getAll, getOne, putOne, deleteOne, openDatabase } from '../../db/database.js';
+import { getAll, putOne, deleteOne, openDatabase } from '../../db/database.js';
 import { defaultDrillRecords } from './drill-model.js';
 import { toLocalIso } from '../../core/dates.js';
 
@@ -19,7 +19,6 @@ export async function resetDrills() {
 }
 
 export const listSessions = () => getAll('practiceSessions');
-export const getSession = (id) => getOne('practiceSessions', id);
 export const saveSession = (s) => putOne('practiceSessions', s);
 export const deleteSession = (id) => deleteOne('practiceSessions', id);
 

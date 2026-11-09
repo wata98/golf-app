@@ -17,7 +17,7 @@ export function renderCourseEditView(root, course, teeName, { onDone }) {
         <tr>
           <td>${h.number}</td>
           <td><select data-par="${i}">${PARS.map((p) => `<option ${p === h.par ? 'selected' : ''}>${p}</option>`).join('')}</select></td>
-          <td><input type="number" inputmode="numeric" min="0" max="999" data-yards="${i}" value="${h.yards ?? ''}"></td>
+          <td><input type="number" inputmode="numeric" min="0" max="999" data-yards="${i}" value="${esc(h.yards ?? '')}"></td>
         </tr>`).join('')}
     </table>
     <button type="button" id="course-save" class="big-button">保存する</button>

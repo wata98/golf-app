@@ -55,6 +55,13 @@ test('返事の読み方: 人数の範囲に入るプランだけ。予約ペー
   assert.deepEqual(parseResponse(SAMPLE, 4).rows.map((x) => x.planName), ['2人以上', '4人だけ', '日付なし']);
 });
 
+test('返事の読み方: https:// で始まらないリンクは使わない（安全のため）', () => {
+  const bad = { Items: [{ golfCourseName: 'A', reserveCalUrlMobile: 'https://ok.example/cal', planInfo: [{ planName: 'P', playerNumMin: 1, playerNumMax: 4, calInfo: { reservePageUrlMobile: 'javascript:alert(1)' } }] }] };
+  assert.equal(parseResponse(bad, 2).rows[0].url, 'https://ok.example/cal');
+  const none = { Items: [{ golfCourseName: 'A', planInfo: [{ planName: 'P', calInfo: { reservePageUrlMobile: 'http://plain.example' } }] }] };
+  assert.throws(() => parseResponse(none, 2), /予約ページのURL/);
+});
+
 test('返事の読み方: 古い形（formatVersion=1 の Item / plan で包まれた形）も読める', () => {
   const v1 = { count: 1, page: 1, pageCount: 1, Items: [{ Item: { golfCourseName: 'A', planInfo: [{ plan: { planName: 'P', playerNumMin: 1, playerNumMax: 4, calInfo: [{ reservePageUrlMobile: 'https://x' }] } }] } }] };
   assert.equal(parseResponse(v1, 2).rows[0].url, 'https://x');

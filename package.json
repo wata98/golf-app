@@ -1,9 +1,18 @@
 {
   "name": "golf-app",
+  "version": "0.8.1",
   "private": true,
   "type": "module",
-  "description": "自分専用のゴルフ上達アプリ。テストを動かすためだけのファイル（追加のライブラリはなし）",
+  "description": "自分専用のゴルフ上達アプリ。このファイルはテストを動かすためだけのもの（追加のライブラリはなし。npm install は不要）",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "node --test"
+  },
+  "x-tested-with": {
+    "node": "26.13.0",
+    "python": "3.12.10（パソコンで開く start-local.bat の確認用サーバー）",
+    "note": "アプリ本体のライブラリは vendor/ に同梱。版と指紋は vendor/README.md"
   }
 }

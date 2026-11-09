@@ -1,7 +1,7 @@
 // 攻略メモの読み書きと、提案に使う材料（クラブの飛び方・左右のブレ）の用意
 
 import { getAll, getOne, putOne } from '../../db/database.js';
-import { holeNoteId, newHoleNote } from './hazard-model.js';
+import { holeNoteId, newHoleNote, aimLabel } from './hazard-model.js';
 import { clubProfiles, sideRates, suggestTeeShot } from './course-rules.js';
 import { distanceClubs } from '../clubs/club-model.js';
 import { filterRecords } from '../distance/distance-stats.js';
@@ -38,7 +38,7 @@ export function planFor(hole, note, ctx) {
   if (!plan) return { manual: false, short: suggestion.short, suggestion, plan };
   const club = ctx.clubs.find((c) => c.id === plan.clubId);
   const prof = ctx.profiles.find((p) => p.club.id === plan.clubId);
-  const aim = { left: '左寄り', center: '中央', right: '右寄り' }[plan.aim] ?? '中央';
+  const aim = aimLabel(plan.aim);
   const rest = prof && hole.yards && hole.par !== 3 ? `・残り${Math.max(0, Math.round(hole.yards - prof.total))}y` : '';
   const short = `${club ? club.name : 'クラブ未選択'}・${aim}${rest}${plan.note ? `（${plan.note}）` : ''}`;
   return { manual: true, short, suggestion, plan };
