@@ -1,0 +1,110 @@
+/* 見た目。屋外の日差しでも読めるよう、白地に黒の太字・はっきりした色だけを使う */
+
+:root {
+  --text: #000;
+  --bg: #fff;
+  --main: #0b5d1e;       /* 濃い緑（ボタン・選んでいるタブ） */
+  --main-text: #fff;
+  --line: #000;
+  --warn-bg: #ffd400;    /* 黄色（お知らせ） */
+  --warn-text: #000;
+  --danger: #b00020;     /* 赤（取り返しのつかない操作） */
+  --tab-height: 76px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+main {
+  /* 下のタブとiPhoneの下のバーに隠れないように余白をとる */
+  padding: 16px 16px calc(var(--tab-height) + env(safe-area-inset-bottom) + 24px);
+  padding-top: calc(16px + env(safe-area-inset-top));
+}
+
+h1 { font-size: 28px; margin: 0 0 16px; }
+h2 { font-size: 22px; margin: 28px 0 8px; }
+
+.placeholder { font-size: 22px; }
+
+/* お知らせ（画面の上） */
+.notice {
+  background: var(--warn-bg);
+  color: var(--warn-text);
+  border-bottom: 3px solid var(--line);
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+  font-weight: 800;
+}
+.notice + main { padding-top: 16px; }
+
+/* 画面下のタブ */
+.tab-bar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--bg);
+  border-top: 3px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tab-button {
+  height: var(--tab-height);
+  border: none;
+  border-right: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 800;
+}
+.tab-button:last-child { border-right: none; }
+.tab-button[aria-current="page"] {
+  background: var(--main);
+  color: var(--main-text);
+}
+
+/* 大きいボタン（手袋でも押せる大きさ） */
+.big-button {
+  display: block;
+  width: 100%;
+  min-height: 64px;
+  margin: 12px 0;
+  border: 3px solid var(--line);
+  border-radius: 10px;
+  background: var(--main);
+  color: var(--main-text);
+  font: inherit;
+  font-size: 20px;
+  font-weight: 800;
+}
+.big-button.secondary { background: var(--bg); color: var(--text); }
+.big-button.danger { background: var(--danger); color: #fff; }
+
+.info-box {
+  border: 3px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+.status { min-height: 1.6em; }
+.status.error { color: var(--danger); }
+.small { font-size: 16px; }
+
+/* 確認の画面 */
+dialog {
+  width: min(92vw, 480px);
+  border: 3px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+  color: var(--text);
+  background: var(--bg);
+}
+dialog::backdrop { background: rgba(0, 0, 0, 0.6); }

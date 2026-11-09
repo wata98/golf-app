@@ -1,0 +1,9 @@
+{
+  "name": "golf-app",
+  "private": true,
+  "type": "module",
+  "description": "自分専用のゴルフ上達アプリ。テストを動かすためだけのファイル（追加のライブラリはなし）",
+  "scripts": {
+    "test": "node --test"
+  }
+}
