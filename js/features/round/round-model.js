@@ -56,6 +56,7 @@ export function newCourse(name, now) {
     tees: [],
     goraCourseId: null,
     bookingLinks: [],
+    greens: [], // ホールごとのグリーン中央の位置 [{ holeNumber, lat, lng }]（機能5）
     favorite: false,
     archived: false,
   };

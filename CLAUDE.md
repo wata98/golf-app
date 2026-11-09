@@ -79,9 +79,11 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
 ## 技術（2026-11-09 ユーザー承認。理由は `docs/decisions.md`）
 - 素のHTML・CSS・JavaScript（フレームワークなし・ビルドなし）。JavaScriptは標準のモジュール（`import`/`export`）で機能ごとに分ける
 - 保存はIndexedDB。オフラインはService Workerを自分で書く
-- ライブラリはこの2つだけ。どちらもネットから読まずリポジトリに同梱する（オフラインで動かすため）
+- ライブラリは下のものだけ。どれもネットから読まずリポジトリに同梱する（オフラインで動かすため）
   - Chart.js 4.6.1（グラフ。`vendor/chart.umd.min.js`。機能2で入れた。取得元などは `vendor/README.md`）
+  - Leaflet 1.9.4（地図。`vendor/leaflet.js`・`leaflet.css`。機能5でグリーンの位置の登録に使う）
   - MediaPipe（骨格推定。機能7の自動計測を足すときに入れる）
+- 地図の写真は国土地理院の「地理院タイル」。出典「国土地理院」と一覧ページへのリンク、「© Axelspace」を必ず表示する（利用条件は `docs/decisions.md`）
   - 他のライブラリを足すときは、必ずユーザーに理由を説明して承認を得る
 - テストはNode.jsに最初から付いているテスト機能（`node --test`）。テスト用ライブラリは入れない
   - 計算・判定はIndexedDBや画面から切り離した関数にして、テストしやすくする
@@ -132,6 +134,11 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
   - `before-tab.js` タブの切り替え（練習メニュー/ドリル集/飛距離を記録） / `practice-menu-view.js` メニュー作成 / `practice-record-view.js` 練習の記録
   - `drill-list-view.js`・`drill-edit-view.js` ドリル集 / `drill-card.js` ドリルの表示 / `practice-store.js` 保存
   - `practice-stats.js`・`practice-review-view.js` 振り返りの「練習」 / `practice-settings-view.js` 配分（設定）
+- `js/features/course/` 機能5 コースマネジメント（「ラウンド前」の「攻略プラン」と、ラウンド中の1行表示）
+  - **`course-rules.js` ティーショットの提案のルール（基準の数字・確率・左右のブレ・狙い）。ルールはここだけに置き、日本語のコメントを保つ**
+  - `course-math.js` 計算の道具（正規分布・距離・座標） / `hazard-model.js` ハザードと攻略メモの形 / `course-store.js` 保存と提案の材料
+  - `plan-list-view.js` 18ホールの一覧 / `hole-plan-view.js` 1ホール（提案・手直し・ハザード） / `green-map-view.js` グリーンの位置の地図
+  - `round-plan.js` ラウンド中の1行表示・詳細・グリーンまでの距離 / `gps.js` 位置の見張り
 - `js/ui/chart-loader.js` グラフの部品（Chart.js）の読み込み
 - `js/features/settings/settings-store.js` 設定の読み書きと初期値
 - `vendor/` 同梱しているライブラリ（書き換えない）

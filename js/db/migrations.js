@@ -40,6 +40,32 @@ export const MIGRATIONS = {
     drills: (data.drills || []).length ? data.drills : defaultDrillRecords(new Date()),
     practiceSessions: (data.practiceSessions || []).map(migratePracticeV4),
   }),
+
+  // v4 → v5: コースマネジメント（機能5）
+  //  - 攻略メモをティーごとにし、ハザードの一覧と手直ししたプランを持たせる。
+  //    最初の形（note / teeClubId / aim）はプランに移す。ティーはそのゴルフ場の最初のティーとみなす
+  //  - ゴルフ場にグリーンの位置の一覧（greens）を足す
+  5: (data) => {
+    const courses = (data.courses || []).map((c) => ({ ...c, greens: c.greens ?? [] }));
+    const firstTee = (courseId) => courses.find((c) => c.id === courseId)?.tees?.[0]?.name ?? '';
+    return {
+      ...data,
+      courses,
+      holeNotes: (data.holeNotes || []).map((n) => {
+        if (Array.isArray(n.hazards)) return n; // すでに新しい形
+        const { note, teeClubId, aim, ...rest } = n;
+        const teeName = rest.teeName ?? firstTee(rest.courseId);
+        const hasPlan = note || teeClubId || aim;
+        return {
+          ...rest,
+          id: `${rest.courseId}|${teeName}|${rest.holeNumber}`,
+          teeName,
+          hazards: [],
+          plan: hasPlan ? { clubId: teeClubId ?? null, aim: aim ?? 'center', note: note ?? '' } : null,
+        };
+      }),
+    };
+  },
 };
 
 function migratePracticeV4(session) {

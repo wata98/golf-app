@@ -74,15 +74,17 @@
 | `bookingLinks` | 予約サイトのリンク `[{ site: "楽天GORA", url: "…" }]` |
 | `favorite` | お気に入りなら `true` |
 | `archived` | 一覧から隠すなら `true` |
+| `greens` | グリーン中央の位置（v5〜）`[{ holeNumber, lat, lng }]`。地図で登録し、ラウンド中にGPSで距離を出すのに使う。ティーが違っても同じなのでゴルフ場に持つ |
 
-### `holeNotes`（ホール攻略メモ）
+### `holeNotes`（ホール攻略メモ。v5〜の形）
 | 項目 | 意味 |
 |---|---|
-| `courseId` | どのゴルフ場か |
-| `holeNumber` | ホール番号（1〜18） |
-| `note` | メモ |
-| `teeClubId` | ティーショットで使うクラブ（任意） |
-| `aim` | 狙う方向。値: `left` / `center` / `right`（任意） |
+| `id` | `ゴルフ場のid|ティー名|ホール番号`（例: `c1|白|3`）。ティーごとに分ける（ハザードまでの距離がティーで違うため） |
+| `courseId` / `teeName` / `holeNumber` | どのゴルフ場・ティー・ホールか |
+| `hazards` | ハザードの一覧 `[{ kind, side, from, to }]`。`kind`: `ob` / `water`（池・ペナルティエリア）/ `bunker` / `narrow`（フェアウェイが狭い）。`side`: `left` / `right` / `both` / `cross`（横切る）/ `green`（グリーン周り）。`from`〜`to`: ティーからの距離（y）。グリーン周りは `null` |
+| `plan` | 手直ししたプラン `{ clubId, aim, note }`（`aim`: `left`/`center`/`right`）。手直ししていなければ `null`（自動の提案を使う） |
+
+- 自動の提案（クラブ・狙い・残り距離・理由）は保存せず、毎回 `course-rules.js` で計算する
 
 ### `rounds`（ラウンド）
 | 項目 | 意味 |
@@ -208,3 +210,6 @@
 - v4（2026-11-09、機能4）: 練習メニュー
   - ドリル集の棚 `drills` を追加（IndexedDB自体の版 `DB_VERSION` も 1 → 2）。1件もなければ最初の40個を入れる
   - `practiceSessions` の `items` を `{ title, balls, done }` → `{ drillId, drillName, topic, block, amount, reason, rating }` に。`place`（`range`）・`unit`（`balls`）・`status`（`done`）・`note` を補う
+- v5（2026-11-09、機能5）: コースマネジメント
+  - `holeNotes` をティーごと（`id` = `ゴルフ場|ティー|ホール`）にし、`hazards` と `plan` を持たせる。最初の形の `note` / `teeClubId` / `aim` は `plan` に移す（ティーはそのゴルフ場の最初のティー）
+  - `courses` に `greens`（`[]`）を追加

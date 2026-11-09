@@ -5,8 +5,9 @@
 // 今のデータの形のバージョン
 // v1: 最初の形 / v2: ラウンドのホールの記録を機能1に合わせた / v3: 飛距離の記録を機能2に合わせた
 // v4: ドリル集（drills）を追加し、練習の記録を機能4に合わせた
+// v5: ホールの攻略メモ（holeNotes）をティーごと・ハザードつきにし、ゴルフ場にグリーンの位置を足した
 // （くわしくは docs/data-model.md の「変更の履歴」）
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 
 // アプリの名前。バックアップのファイルに入れて、別のアプリのファイルと区別する
 export const APP_ID = 'golf-app';

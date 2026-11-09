@@ -10,6 +10,7 @@ import { saveRound, deleteRound, getCourse, saveCourse } from './round-store.js'
 import { onSwipe } from './swipe.js';
 import { holeEditDialog } from './hole-edit-dialog.js';
 import { openFinderDialog } from '../distance/finder-dialog.js';
+import { roundHolePlan, openPlanDialog, showGreenDistance, clearRoundPlanCache } from '../course/round-plan.js';
 
 // opts.mode: 'playing'（ラウンド中）/ 'edit'（振り返りから修正）
 // opts.onHalf(): 9番で「次へ」 / opts.onLast(): 18番で「次へ」
@@ -44,6 +45,9 @@ export function renderHoleView(root, round, opts) {
           <button type="button" class="chip" data-act="menu">${opts.mode === 'edit' ? '修正を終える' : 'メニュー'}</button>
         </div>
       </div>
+      ${opts.mode === 'playing' ? `
+        <button type="button" class="plan-line" data-act="plan" hidden></button>
+        <div class="gps-line" hidden></div>` : ''}
       ${stepper('打数', strokes, 'strokes')}
       ${stepper('パット', putts, 'putts')}
       <p class="gir-line">${gir ? '● パーオン' : '○ パーオンならず'}</p>
@@ -68,6 +72,20 @@ export function renderHoleView(root, round, opts) {
         <button type="button" class="big-button secondary" data-act="prev" ${index === 0 ? 'disabled' : ''}>◀ 前のホール</button>
         <button type="button" class="big-button" data-act="next">${nextLabel}</button>
       </div>`;
+    if (opts.mode === 'playing') fillPlan(h);
+  }
+
+  // 攻略プランの1行とグリーンまでの距離（機能5）。ホールごとに一度だけ読み込んで覚えておく
+  const planCache = new Map();
+  async function fillPlan(h) {
+    if (!planCache.has(h.number)) planCache.set(h.number, roundHolePlan(round, h).catch(() => null));
+    const info = await planCache.get(h.number);
+    if (hole() !== h) return; // 読み込み中に別のホールへ移った
+    const line = el.querySelector('.plan-line');
+    if (!line || !info) return;
+    line.hidden = false;
+    line.textContent = `攻略: ${info.p.short}${info.p.manual ? '' : '（自動）'} ›`;
+    showGreenDistance(el.querySelector('.gps-line'), info.green);
   }
 
   // ボタンが押されたとき。どのボタンかは data-act などで見分ける
@@ -80,6 +98,11 @@ export function renderHoleView(root, round, opts) {
     if (act === 'next') return goNext();
     if (act === 'edit-hole') return editHole();
     if (act === 'finder') return openFinderDialog(h.yards); // ホールの距離を最初に入れておく
+    if (act === 'plan') {
+      const info = await planCache.get(h.number);
+      if (info) openPlanDialog(h, info);
+      return;
+    }
     if (act === 'menu') return opts.mode === 'edit' ? opts.onExit() : openMenu();
 
     commitHole(h); // 何か押したら、そのホールは入力済みにする
@@ -153,6 +176,9 @@ export function renderHoleView(root, round, opts) {
         ch.yards = result.yards;
         await saveCourse(course);
       }
+      // パー・距離が変わると攻略プランも変わるので、読み込み直す
+      planCache.delete(h.number);
+      clearRoundPlanCache();
     }
     render();
   }

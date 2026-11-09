@@ -100,6 +100,21 @@ test('v3→v4: ドリル集がすでにあれば、そのまま', () => {
   assert.deepEqual(out.drills, [{ id: 'my-1', topic: 'iron' }]);
 });
 
+test('v4→v5: 攻略メモをティーごとにして、最初の形のメモをプランに移す。ゴルフ場に greens を足す', () => {
+  const v4 = {
+    courses: [{ id: 'c1', name: 'テストCC', tees: [{ name: '白', holes: [] }] }],
+    holeNotes: [
+      { id: 'x', courseId: 'c1', holeNumber: 3, note: '右OB注意', teeClubId: 'k1', aim: 'left' },
+      { id: 'y', courseId: 'c1', holeNumber: 4 },
+    ],
+  };
+  const out = migrateData(v4, 4);
+  assert.deepEqual(out.courses[0].greens, []);
+  assert.deepEqual(out.holeNotes[0], { id: 'c1|白|3', courseId: 'c1', holeNumber: 3, teeName: '白', hazards: [], plan: { clubId: 'k1', aim: 'left', note: '右OB注意' } });
+  assert.equal(out.holeNotes[1].plan, null);
+  assert.equal(out.holeNotes.length, 2);
+});
+
 test('アプリより新しい版のデータはエラー', () => {
   assert.throws(() => migrateData({}, SCHEMA_VERSION + 1), /新しい版のアプリ/);
 });

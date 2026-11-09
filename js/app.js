@@ -7,6 +7,8 @@ import { setupRoundTab } from './features/round/round-tab.js';
 import { setupReviewTab } from './features/review/review-tab.js';
 import { getPlayingRound } from './features/round/round-store.js';
 import { renderBeforeTab } from './features/practice/before-tab.js';
+import { stopGps } from './features/course/gps.js';
+import { clearRoundPlanCache } from './features/course/round-plan.js';
 
 async function start() {
   // オフラインで開けるようにする仕組み（Service Worker）を登録する
@@ -29,8 +31,10 @@ async function start() {
 
     // タブを開くたびに中身を新しくする
     const tabs = setupTabs((tab) => {
+      // GPSは「ラウンド中」タブにいるときだけ使う（電池を減らさないため）
+      if (tab !== 'playing') stopGps();
       if (tab === 'before') renderBeforeTab(beforeRoot);
-      if (tab === 'playing') roundTab.show();
+      if (tab === 'playing') { clearRoundPlanCache(); roundTab.show(); }
       if (tab === 'review') reviewTab.show();
       if (tab === 'settings') settings.refresh();
     });
