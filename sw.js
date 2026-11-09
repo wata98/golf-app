@@ -5,7 +5,7 @@
 //   上げないと、スマホに古いファイルが残ったままになる。
 // ★ファイルを足したら APP_FILES にも足す（テストで確かめている）。
 
-const APP_VERSION = '0.2.0';
+const APP_VERSION = '0.3.0';
 const CACHE_NAME = 'golf-app-' + APP_VERSION;
 
 const APP_FILES = [
@@ -37,6 +37,19 @@ const APP_FILES = [
   'js/features/round/summary-view.js',
   'js/features/round/swipe.js',
   'js/features/review/review-tab.js',
+  'js/features/settings/settings-store.js',
+  'js/features/clubs/club-model.js',
+  'js/features/clubs/club-store.js',
+  'js/features/clubs/clubs-settings-view.js',
+  'js/features/distance/distance-stats.js',
+  'js/features/distance/club-finder.js',
+  'js/features/distance/distance-store.js',
+  'js/features/distance/distance-entry-view.js',
+  'js/features/distance/distance-review-view.js',
+  'js/features/distance/distance-chart.js',
+  'js/features/distance/finder-dialog.js',
+  'js/features/distance/finder-settings-view.js',
+  'vendor/chart.umd.min.js',
   'js/features/settings/settings-view.js',
   'js/features/settings/backup-actions.js',
 ];

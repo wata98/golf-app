@@ -9,6 +9,7 @@ import {
 import { saveRound, deleteRound, getCourse, saveCourse } from './round-store.js';
 import { onSwipe } from './swipe.js';
 import { holeEditDialog } from './hole-edit-dialog.js';
+import { openFinderDialog } from '../distance/finder-dialog.js';
 
 // opts.mode: 'playing'（ラウンド中）/ 'edit'（振り返りから修正）
 // opts.onHalf(): 9番で「次へ」 / opts.onLast(): 18番で「次へ」
@@ -33,7 +34,10 @@ export function renderHoleView(root, round, opts) {
     const nextLabel = last ? (opts.mode === 'edit' ? '修正を終える' : '集計へ ▶') : h.number === 9 && opts.mode === 'playing' ? '前半の集計 ▶' : '次のホール ▶';
     el.innerHTML = `
       <div class="hole-header">
-        <div class="hole-total">合計 <b>${total.score}</b>（${formatDiff(total.diff)}）<span class="small">${total.holes}ホール入力</span></div>
+        <div class="hole-total">
+          <span>合計 <b>${total.score}</b>（${formatDiff(total.diff)}）<span class="small">${total.holes}H</span></span>
+          <button type="button" class="chip" data-act="finder">早見表</button>
+        </div>
         <div class="hole-title">
           <span class="hole-no">${h.number}番</span>
           <button type="button" class="chip" data-act="edit-hole">パー${h.par}${h.yards ? `・${h.yards}y` : ''} ✎</button>
@@ -75,6 +79,7 @@ export function renderHoleView(root, round, opts) {
     if (act === 'prev') return move(-1);
     if (act === 'next') return goNext();
     if (act === 'edit-hole') return editHole();
+    if (act === 'finder') return openFinderDialog(h.yards); // ホールの距離を最初に入れておく
     if (act === 'menu') return opts.mode === 'edit' ? opts.onExit() : openMenu();
 
     commitHole(h); // 何か押したら、そのホールは入力済みにする

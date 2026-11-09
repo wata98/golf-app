@@ -6,8 +6,12 @@ import { countRecords } from '../../db/backup-format.js';
 import { exportBackup, readBackupFile, restoreBackup } from './backup-actions.js';
 import { updateBackupNotice } from '../../ui/notice.js';
 import { APP_VERSION } from '../../version.js';
+import { renderClubsSettings } from '../clubs/clubs-settings-view.js';
+import { renderFinderSettings } from '../distance/finder-settings-view.js';
 
 const HTML = `
+  <div id="clubs-settings"></div>
+  <div id="finder-settings"></div>
   <h2>バックアップ</h2>
   <div class="info-box">
     <div>最後にバックアップした日</div>
@@ -41,8 +45,10 @@ export function setupSettingsView(root) {
     status.classList.toggle('error', isError);
   }
 
-  // 「最後にバックアップした日」と上のお知らせを新しくする
+  // 設定タブの中身（マイクラブ・補正・最後にバックアップした日）と上のお知らせを新しくする
   async function refresh() {
+    await renderClubsSettings($('clubs-settings'));
+    await renderFinderSettings($('finder-settings'));
     const meta = await getMeta();
     const last = meta && meta.lastExportedAt;
     const days = last ? daysSince(last, new Date()) : 0;

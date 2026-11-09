@@ -6,12 +6,29 @@ import { teeShotShort } from '../round/round-model.js';
 import { listFinishedRounds, getRound, deleteRound } from '../round/round-store.js';
 import { summaryTable } from '../round/summary-view.js';
 import { renderHoleView } from '../round/hole-view.js';
+import { renderDistanceReview } from '../distance/distance-review-view.js';
 
 export function setupReviewTab(root) {
-  // 一覧（新しい順）
+  let mode = 'rounds'; // 'rounds'（ラウンド）/ 'distance'（飛距離）
+
+  // 上の切り替え（ラウンド / 飛距離）と、その中身
   async function show(message = '') {
-    const rounds = await listFinishedRounds();
     root.innerHTML = `
+      <div class="choices cols-2 review-switch">
+        <button type="button" class="choice" data-mode="rounds" aria-pressed="${mode === 'rounds'}">ラウンド</button>
+        <button type="button" class="choice" data-mode="distance" aria-pressed="${mode === 'distance'}">飛距離</button>
+      </div>
+      <div id="review-body"></div>`;
+    root.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => { mode = b.dataset.mode; show(); }));
+    const body = root.querySelector('#review-body');
+    if (mode === 'distance') await renderDistanceReview(body);
+    else await showRounds(body, message);
+  }
+
+  // ラウンドの一覧（新しい順）
+  async function showRounds(body, message) {
+    const rounds = await listFinishedRounds();
+    body.innerHTML = `
       ${message ? `<p class="info-box">${esc(message)}</p>` : ''}
       <h2>過去のラウンド</h2>
       ${rounds.length === 0 ? '<p>まだ記録したラウンドがありません。</p>' : ''}
@@ -25,7 +42,7 @@ export function setupReviewTab(root) {
             </button></li>`;
         }).join('')}
       </ul>`;
-    root.querySelectorAll('.round-item').forEach((b) => b.addEventListener('click', () => showDetail(b.dataset.id)));
+    body.querySelectorAll('.round-item').forEach((b) => b.addEventListener('click', () => showDetail(b.dataset.id)));
   }
 
   // 1ラウンドの詳細

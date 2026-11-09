@@ -2,6 +2,7 @@
 // 画面や保存の仕組みから切り離した計算だけなので、テストしやすい。
 
 import { SCHEMA_VERSION, DATA_STORES } from './schema.js';
+import { defaultClubs } from '../features/clubs/club-model.js';
 
 // 移行処理の一覧。キーは「移行したあとのバージョン」。
 // 例: 2: (data) => { ...v1の形をv2の形に直して返す... }
@@ -18,7 +19,28 @@ export const MIGRATIONS = {
       holes: (round.holes || []).map(migrateHoleV2),
     })),
   }),
+
+  // v2 → v3: 飛距離の記録を機能2の形にする
+  //  - source（range/round/monitor）を place（range=練習場 / course=コース）に置き換える。計測器(monitor)は練習場にまとめる
+  //  - isMiss（ミスショットか）を足す
+  //  - クラブが1本もなければ、よくある14本を入れる
+  3: (data) => ({
+    ...data,
+    distanceRecords: (data.distanceRecords || []).map(migrateDistanceV3),
+    clubs: (data.clubs || []).length ? data.clubs : defaultClubs(new Date()),
+  }),
 };
+
+const SOURCE_TO_PLACE = { range: 'range', monitor: 'range', round: 'course' };
+
+function migrateDistanceV3(record) {
+  const { source, ...rest } = record;
+  return {
+    ...rest,
+    place: rest.place ?? SOURCE_TO_PLACE[source] ?? 'range',
+    isMiss: rest.isMiss ?? false,
+  };
+}
 
 const FAIRWAY_TO_TEE_SHOT = { hit: 'fairway', left: 'leftRough', right: 'rightRough' };
 

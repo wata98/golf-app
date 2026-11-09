@@ -34,9 +34,10 @@ test('APP_FILES に書いたファイルが全部ある', () => {
   }
 });
 
-test('js・css・icons のファイルが全部 APP_FILES に入っている（入れ忘れるとオフラインで開けない）', () => {
+test('js・css・icons・vendor のファイルが全部 APP_FILES に入っている（入れ忘れるとオフラインで開けない）', () => {
   const listed = new Set(appFiles());
-  for (const f of [...listFiles('js'), ...listFiles('css'), ...listFiles('icons')]) {
+  const vendorJs = listFiles('vendor').filter((f) => f.endsWith('.js'));
+  for (const f of [...listFiles('js'), ...listFiles('css'), ...listFiles('icons'), ...vendorJs]) {
     assert.ok(listed.has(f), `${relative('.', f)} を sw.js の APP_FILES に足してください`);
   }
 });

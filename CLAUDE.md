@@ -80,7 +80,7 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
 - 素のHTML・CSS・JavaScript（フレームワークなし・ビルドなし）。JavaScriptは標準のモジュール（`import`/`export`）で機能ごとに分ける
 - 保存はIndexedDB。オフラインはService Workerを自分で書く
 - ライブラリはこの2つだけ。どちらもネットから読まずリポジトリに同梱する（オフラインで動かすため）
-  - Chart.js（グラフ。機能3で入れる）
+  - Chart.js 4.6.1（グラフ。`vendor/chart.umd.min.js`。機能2で入れた。取得元などは `vendor/README.md`）
   - MediaPipe（骨格推定。機能7の自動計測を足すときに入れる）
   - 他のライブラリを足すときは、必ずユーザーに理由を説明して承認を得る
 - テストはNode.jsに最初から付いているテスト機能（`node --test`）。テスト用ライブラリは入れない
@@ -116,7 +116,14 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
   - `round-stats.js` 集計の計算（パーオン判定・FWキープ率など） / `round-model.js` ラウンド・ゴルフ場の記録を作る・直す
   - `round-store.js` 保存 / `round-tab.js` 画面の切り替え / `start-view.js` 開始 / `hole-view.js` ホール入力
   - `hole-edit-dialog.js` パー・距離の修正 / `course-edit-view.js` ゴルフ場の一括編集 / `summary-view.js` 集計の表 / `swipe.js` スワイプ
-- `js/features/review/` 「振り返り」タブ（ラウンド一覧・詳細・修正・削除）
+- `js/features/review/` 「振り返り」タブ（「ラウンド」「飛距離」の切り替え。ラウンド一覧・詳細・修正・削除）
+- `js/features/clubs/` 機能2 マイクラブ（`club-model.js` 最初の14本・並べ替え / `clubs-settings-view.js` 設定タブの画面）
+- `js/features/distance/` 機能2 飛距離
+  - `distance-stats.js` 集計（平均・中央値・ばらつき・90日） / `club-finder.js` 早見表の計算（高低差の補正・近いクラブ）
+  - `distance-entry-view.js` 記録（「ラウンド前」タブ） / `distance-review-view.js` 集計表とグラフ（「振り返り」）
+  - `distance-chart.js` 推移グラフ / `finder-dialog.js` 番手早見表 / `finder-settings-view.js` 補正の係数（設定）
+- `js/features/settings/settings-store.js` 設定の読み書きと初期値
+- `vendor/` 同梱しているライブラリ（書き換えない）
 - `js/features/<機能名>/` これから足す機能はここに1フォルダずつ
 - `tests/` 自動テスト（`*.test.js`）
 - `tools/` 開発用の道具（アプリには含まれない）

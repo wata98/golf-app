@@ -139,7 +139,7 @@ h2 { font-size: 22px; margin: 28px 0 8px; }
   background: var(--bg);
   border-bottom: 3px solid var(--line);
 }
-.hole-total { font-size: 20px; }
+.hole-total { font-size: 20px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .hole-total b { font-size: 30px; }
 .hole-title { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
 .hole-no { font-size: 30px; font-weight: 900; margin-right: auto; }
@@ -202,7 +202,7 @@ h3 { font-size: 18px; margin: 16px 0 6px; }
   border-top: 3px solid var(--line);
 }
 .hole-nav .big-button { margin: 4px 0; }
-.big-button:disabled { opacity: 0.35; }
+.big-button:disabled, .step-button:disabled { opacity: 0.25; }
 
 /* ===== 集計・表 ===== */
 table { width: 100%; border-collapse: collapse; }
@@ -232,6 +232,40 @@ th, td { border: 2px solid var(--line); padding: 6px 4px; text-align: center; }
   text-align: left;
 }
 .round-item b { font-size: 22px; white-space: nowrap; }
+
+/* ===== マイクラブ ===== */
+.club-list { list-style: none; padding: 0; margin: 0; }
+.club-row { display: grid; grid-template-columns: 52px 52px 1fr auto; gap: 6px; align-items: center; margin: 6px 0; }
+.club-row .small-step { min-height: 48px; font-size: 20px; }
+.club-row .club-name { min-width: 0; }
+.club-row:has(> span.club-name) { grid-template-columns: 1fr auto; }
+input.club-name, .club-add input, .club-add select, #chart-club {
+  width: 100%;
+  min-height: 48px;
+  padding: 4px 10px;
+  border: 3px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 18px;
+}
+.club-add { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.club-add .big-button { grid-column: 1 / 3; margin: 0; }
+details summary { min-height: 48px; padding: 10px 0; }
+
+/* ===== 飛距離 ===== */
+.club-grid .choice { font-size: 15px; }
+.dist-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+#dist-miss { width: 100%; margin-top: 4px; }
+.dist-records { list-style: none; padding: 0; }
+.dist-records li { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 2px solid var(--line); }
+.dist-table { margin-top: 12px; font-size: 17px; }
+.chart-box { position: relative; margin-top: 8px; }
+.finder-result { font-size: 20px; min-height: 3em; }
+.finder-list { list-style: none; padding: 0; margin: 8px 0; }
+.finder-list li { padding: 10px 12px; margin: 6px 0; border: 3px solid var(--line); border-radius: 10px; font-size: 22px; }
+.review-switch { margin-bottom: 8px; }
 
 /* 確認の画面 */
 dialog {

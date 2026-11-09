@@ -37,6 +37,12 @@ export function daysSince(isoText, now) {
   return Math.round((nowDay - fromDay) / DAY_MS);
 }
 
+// 「2026-11-09」の形の日付から now まで何日か（同じ日なら0）。時間帯でずれないよう、その日の0時として読む
+export function daysSinceDate(dateText, now) {
+  const [y, m, d] = dateText.split('-').map(Number);
+  return daysSince(toLocalIso(new Date(y, m - 1, d)), now);
+}
+
 // バックアップのお知らせを出すかどうか。
 // 最後にバックアップした日から30日以上。一度もしていなければ、使い始めた日から30日以上。
 export function needsBackupReminder(meta, now) {

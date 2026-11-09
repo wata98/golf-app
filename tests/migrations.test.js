@@ -55,6 +55,35 @@ test('v1→v2: ホールの fairway を teeShot に直し、gir を消し、arou
   assert.deepEqual(out.clubs, [{ id: 'c1', name: '7I' }]);
 });
 
+test('v2→v3: 飛距離の source を place に直し、isMiss を足す', () => {
+  const v2 = {
+    distanceRecords: [
+      { id: 'd1', clubId: 'c1', date: '2026-10-01', carry: 150, total: 160, source: 'range' },
+      { id: 'd2', clubId: 'c1', date: '2026-10-02', carry: 148, source: 'monitor' },
+      { id: 'd3', clubId: 'c1', date: '2026-10-03', total: 155, source: 'round' },
+    ],
+    clubs: [{ id: 'c1', name: '7I', type: 'iron', order: 1 }],
+  };
+  const out = migrateData(v2, 2);
+  assert.deepEqual(out.distanceRecords.map((r) => r.place), ['range', 'range', 'course']);
+  assert.ok(out.distanceRecords.every((r) => r.isMiss === false && !('source' in r)));
+  assert.equal(out.distanceRecords[0].carry, 150);
+  // クラブがあれば、そのまま（14本は足さない）
+  assert.deepEqual(out.clubs, v2.clubs);
+});
+
+test('v2→v3: クラブが1本もなければ14本を入れる', () => {
+  const out = migrateData({ clubs: [] }, 2);
+  assert.equal(out.clubs.length, 14);
+});
+
+test('v1 のデータは v2、v3 と順に移行される', () => {
+  const out = migrateData({ rounds: [{ id: 'r', holes: [{ number: 1, par: 4, strokes: 4, putts: 2, fairway: 'hit' }] }], distanceRecords: [{ id: 'd', source: 'round' }] }, 1);
+  assert.equal(out.rounds[0].holes[0].teeShot, 'fairway');
+  assert.equal(out.distanceRecords[0].place, 'course');
+  assert.equal(out.clubs.length, 14);
+});
+
 test('アプリより新しい版のデータはエラー', () => {
   assert.throws(() => migrateData({}, SCHEMA_VERSION + 1), /新しい版のアプリ/);
 });

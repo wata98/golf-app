@@ -5,6 +5,7 @@ import { SCHEMA_VERSION, DATA_STORES, SYSTEM_STORES, SINGLE_ID, emptyData } from
 import { migrateData } from './migrations.js';
 import { buildBackup } from './backup-format.js';
 import { toLocalIso } from '../core/dates.js';
+import { defaultClubs } from '../features/clubs/club-model.js';
 
 const DB_NAME = 'golf-app';
 // IndexedDB自体の版。棚（ストア）を増やすときだけ上げる。
@@ -140,6 +141,8 @@ export async function saveSnapshot(reason) {
 export async function prepareDatabase() {
   const meta = await getMeta();
   if (!meta) {
+    // 初めて開いたとき: よくある14本のクラブを入れておく（設定タブで自分のバッグに直す）
+    for (const club of defaultClubs(new Date())) await putOne('clubs', club);
     await updateMeta({ schemaVersion: SCHEMA_VERSION, createdAt: toLocalIso(new Date()), lastExportedAt: null });
     return;
   }

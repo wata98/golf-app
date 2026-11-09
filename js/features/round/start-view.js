@@ -4,6 +4,7 @@ import { esc } from '../../ui/html.js';
 import { toDateOnly } from '../../core/dates.js';
 import { newCourse, ensureTee, newRound } from './round-model.js';
 import { listCourses, saveCourse, saveRound } from './round-store.js';
+import { openFinderDialog } from '../distance/finder-dialog.js';
 
 const NEW = '__new__'; // 「新しいゴルフ場」を選んだときの値
 
@@ -12,6 +13,7 @@ export async function renderStartView(root, { message = '', onStarted, onEditCou
   const courses = await listCourses();
   root.innerHTML = `
     ${message ? `<p class="info-box">${esc(message)}</p>` : ''}
+    <button type="button" id="finder-button" class="big-button secondary">番手早見表</button>
     <h2>ラウンドを始める</h2>
     <label class="field">日付
       <input type="date" id="start-date" value="${toDateOnly(new Date())}">
@@ -46,6 +48,7 @@ export async function renderStartView(root, { message = '', onStarted, onEditCou
     $('start-tee').value = tees[0] || '';
   }
   $('start-course').addEventListener('change', onCourseChange);
+  $('finder-button').addEventListener('click', () => openFinderDialog());
   onCourseChange();
 
   // 入力を確かめ、ゴルフ場（新しければ作る）とティーを用意する

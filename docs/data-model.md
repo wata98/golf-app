@@ -30,6 +30,12 @@
 | `id` | 常に `"main"` |
 | `rakutenAppId` | 楽天のアプリID（機能6。未入力なら空文字。コードには書かない） |
 | `homePrefecture` | よく行く地域（空き確認の初期値） |
+| `distanceExcludeMiss` | 飛距離の集計でミスショットを除くか（初期値 `true`。振り返りと早見表で共通） |
+| `distanceRecentOnly` | 飛距離の集計を直近90日だけにするか（初期値 `false`） |
+| `elevationUp` / `elevationDown` | 早見表の高低差の補正。1mにつき何ヤード足す（打ち上げ）・引く（打ち下ろし）か（初期値 `1.0`） |
+| `lastDistancePlace` | 飛距離の記録で前回選んだ場所 |
+
+- まだ保存していない項目は `js/features/settings/settings-store.js` の初期値を使う（項目を足しても移行は要らない）
 
 ### `clubs`（クラブ）
 | 項目 | 意味 |
@@ -40,6 +46,9 @@
 | `order` | 並び順（番手早見表で使う） |
 | `archived` | バッグから外したら `true` |
 
+- 初めて開いたとき（とv3への移行でクラブが1本もないとき）は、よくある14本を入れる（`club-model.js` の `DEFAULT_CLUBS`）
+- パター（`putter`）は飛距離の記録・早見表に出さない
+
 ### `distanceRecords`（飛距離）
 | 項目 | 意味 |
 |---|---|
@@ -47,7 +56,8 @@
 | `date` | 測った日 |
 | `carry` | キャリー（任意） |
 | `total` | ランを含めた距離（任意。`carry` か `total` のどちらかは必須） |
-| `source` | 値: `range`（練習場）/ `round`（ラウンド）/ `monitor`（計測器） |
+| `place` | 場所（v3〜）。値: `range`（練習場）/ `course`（コース） |
+| `isMiss` | ミスショットなら `true`（v3〜） |
 | `shotId` | ラウンド中の1打から作った記録なら、その1打の `id`（任意） |
 | `note` | メモ |
 
@@ -172,3 +182,7 @@
   - `gir` を削除（毎回計算する）
   - `aroundGreen`（`null`）と `note`（空文字）を追加
   - ラウンドに `courseName` と `currentHole` を持たせる（v1のデータにはないことがあるので、ない前提でも動くようにする）
+- v3（2026-11-09、機能2）: 飛距離の記録とクラブ
+  - `distanceRecords` の `source`（`range`/`round`/`monitor`）→ `place`（`range`/`course`）。`monitor` は `range` に、`round` は `course` にする
+  - `distanceRecords` に `isMiss`（`false`）を追加
+  - クラブが1本もなければ、よくある14本を入れる

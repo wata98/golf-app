@@ -6,6 +6,7 @@ import { setupSettingsView } from './features/settings/settings-view.js';
 import { setupRoundTab } from './features/round/round-tab.js';
 import { setupReviewTab } from './features/review/review-tab.js';
 import { getPlayingRound } from './features/round/round-store.js';
+import { renderDistanceEntry } from './features/distance/distance-entry-view.js';
 
 async function start() {
   // オフラインで開けるようにする仕組み（Service Worker）を登録する
@@ -24,16 +25,20 @@ async function start() {
     const roundTab = setupRoundTab(document.getElementById('round-root'));
     const reviewTab = setupReviewTab(document.getElementById('review-root'));
 
+    const beforeRoot = document.getElementById('before-root');
+
     // タブを開くたびに中身を新しくする
     const tabs = setupTabs((tab) => {
+      if (tab === 'before') renderDistanceEntry(beforeRoot);
       if (tab === 'playing') roundTab.show();
       if (tab === 'review') reviewTab.show();
       if (tab === 'settings') settings.refresh();
     });
     await settings.refresh();
 
-    // 記録中のラウンドがあれば、「ラウンド中」タブから再開する
+    // 記録中のラウンドがあれば「ラウンド中」タブから再開する。なければ「ラウンド前」
     if (await getPlayingRound()) tabs.show('playing');
+    else tabs.show('before');
   } catch (err) {
     console.error(err);
     const notice = document.getElementById('notice');
