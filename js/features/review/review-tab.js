@@ -8,15 +8,16 @@ import { summaryTable } from '../round/summary-view.js';
 import { renderHoleView } from '../round/hole-view.js';
 import { renderDistanceReview } from '../distance/distance-review-view.js';
 import { renderAnalysis } from '../analysis/analysis-view.js';
+import { renderPracticeReview } from '../practice/practice-review-view.js';
 
 export function setupReviewTab(root) {
-  let mode = 'rounds'; // 'rounds'（ラウンド）/ 'distance'（飛距離）/ 'analysis'（分析）
-  const MODES = [['rounds', 'ラウンド'], ['distance', '飛距離'], ['analysis', '分析']];
+  let mode = 'rounds'; // 'rounds'（ラウンド）/ 'distance'（飛距離）/ 'analysis'（分析）/ 'practice'（練習）
+  const MODES = [['rounds', 'ラウンド'], ['distance', '飛距離'], ['analysis', '分析'], ['practice', '練習']];
 
-  // 上の切り替え（ラウンド / 飛距離 / 分析）と、その中身
+  // 上の切り替え（ラウンド / 飛距離 / 分析 / 練習）と、その中身
   async function show(message = '') {
     root.innerHTML = `
-      <div class="choices cols-3 review-switch">
+      <div class="choices cols-4 review-switch">
         ${MODES.map(([v, l]) => `<button type="button" class="choice" data-mode="${v}" aria-pressed="${mode === v}">${l}</button>`).join('')}
       </div>
       <div id="review-body"></div>`;
@@ -24,6 +25,7 @@ export function setupReviewTab(root) {
     const body = root.querySelector('#review-body');
     if (mode === 'distance') await renderDistanceReview(body);
     else if (mode === 'analysis') await renderAnalysis(body);
+    else if (mode === 'practice') await renderPracticeReview(body);
     else await showRounds(body, message);
   }
 

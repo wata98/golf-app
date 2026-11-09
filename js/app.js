@@ -6,7 +6,7 @@ import { setupSettingsView } from './features/settings/settings-view.js';
 import { setupRoundTab } from './features/round/round-tab.js';
 import { setupReviewTab } from './features/review/review-tab.js';
 import { getPlayingRound } from './features/round/round-store.js';
-import { renderDistanceEntry } from './features/distance/distance-entry-view.js';
+import { renderBeforeTab } from './features/practice/before-tab.js';
 
 async function start() {
   // オフラインで開けるようにする仕組み（Service Worker）を登録する
@@ -29,7 +29,7 @@ async function start() {
 
     // タブを開くたびに中身を新しくする
     const tabs = setupTabs((tab) => {
-      if (tab === 'before') renderDistanceEntry(beforeRoot);
+      if (tab === 'before') renderBeforeTab(beforeRoot);
       if (tab === 'playing') roundTab.show();
       if (tab === 'review') reviewTab.show();
       if (tab === 'settings') settings.refresh();

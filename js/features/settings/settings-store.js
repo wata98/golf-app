@@ -4,6 +4,7 @@
 import { getOne, putOne } from '../../db/database.js';
 import { SINGLE_ID } from '../../db/schema.js';
 import { DEFAULT_ELEVATION_UP, DEFAULT_ELEVATION_DOWN } from '../distance/club-finder.js';
+import { DEFAULT_SHARES } from '../practice/practice-rules.js';
 
 export const DEFAULT_SETTINGS = {
   rakutenAppId: '',
@@ -18,6 +19,12 @@ export const DEFAULT_SETTINGS = {
   lastDistancePlace: 'range',
   // 弱点分析の目標スコア（パー72のコースでのスコア）
   targetScore: 100,
+  // 練習メニューの配分（%）: 一番の課題・2番目の課題・ウォームアップと仕上げ
+  practiceShares: { ...DEFAULT_SHARES },
+  // 練習メニューで前回選んだ場所・量
+  lastPracticePlace: 'range',
+  lastPracticeUnit: 'balls',
+  lastPracticeAmount: 100,
 };
 
 export async function getSettings() {

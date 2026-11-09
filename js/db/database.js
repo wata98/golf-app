@@ -6,11 +6,13 @@ import { migrateData } from './migrations.js';
 import { buildBackup } from './backup-format.js';
 import { toLocalIso } from '../core/dates.js';
 import { defaultClubs } from '../features/clubs/club-model.js';
+import { defaultDrillRecords } from '../features/practice/drill-model.js';
 
 const DB_NAME = 'golf-app';
 // IndexedDB自体の版。棚（ストア）を増やすときだけ上げる。
-// データの形の版（SCHEMA_VERSION）とは別もの。v1で全部の棚を作ってあるので、普段は上げなくてよい。
-const DB_VERSION = 1;
+// データの形の版（SCHEMA_VERSION）とは別もの。
+// 1: 最初の棚 / 2: ドリル集（drills）の棚を追加（機能4）
+const DB_VERSION = 2;
 // 自動バックアップ（backups の棚）を何件残すか
 const KEEP_BACKUPS = 3;
 
@@ -143,6 +145,8 @@ export async function prepareDatabase() {
   if (!meta) {
     // 初めて開いたとき: よくある14本のクラブを入れておく（設定タブで自分のバッグに直す）
     for (const club of defaultClubs(new Date())) await putOne('clubs', club);
+    // 最初のドリル集（js/features/practice/drill-data.js）も入れておく
+    for (const drill of defaultDrillRecords(new Date())) await putOne('drills', drill);
     await updateMeta({ schemaVersion: SCHEMA_VERSION, createdAt: toLocalIso(new Date()), lastExportedAt: null });
     return;
   }

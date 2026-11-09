@@ -126,6 +126,12 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
   - **`analysis-rules.js` 判定のルール（失点の数え方・目安の表・課題の決め方・理由の文章）。ユーザーが自分で読んで変える前提なので、ルールはここだけに置き、日本語のコメントを保つ**
   - `analysis-metrics.js` 指標の計算（期間の選び方・18ホール換算・パー別） / `analysis-view.js` 画面 / `analysis-chart.js` 推移グラフ
   - `target-settings-view.js` 目標スコア（設定タブ）
+- `js/features/practice/` 機能4 練習メニュー（「ラウンド前」タブ）
+  - **`practice-rules.js` メニューの作り方のルール（課題の対応・配分・ドリルの選び方）。ルールはここだけに置き、日本語のコメントを保つ**
+  - **`drill-data.js` 最初のドリル集（40個）**。`drill-model.js` ドリルの作成・確かめ
+  - `before-tab.js` タブの切り替え（練習メニュー/ドリル集/飛距離を記録） / `practice-menu-view.js` メニュー作成 / `practice-record-view.js` 練習の記録
+  - `drill-list-view.js`・`drill-edit-view.js` ドリル集 / `drill-card.js` ドリルの表示 / `practice-store.js` 保存
+  - `practice-stats.js`・`practice-review-view.js` 振り返りの「練習」 / `practice-settings-view.js` 配分（設定）
 - `js/ui/chart-loader.js` グラフの部品（Chart.js）の読み込み
 - `js/features/settings/settings-store.js` 設定の読み書きと初期値
 - `vendor/` 同梱しているライブラリ（書き換えない）

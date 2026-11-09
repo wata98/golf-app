@@ -9,9 +9,11 @@ import { APP_VERSION } from '../../version.js';
 import { renderClubsSettings } from '../clubs/clubs-settings-view.js';
 import { renderFinderSettings } from '../distance/finder-settings-view.js';
 import { renderTargetSettings } from '../analysis/target-settings-view.js';
+import { renderPracticeSettings } from '../practice/practice-settings-view.js';
 
 const HTML = `
   <div id="target-settings"></div>
+  <div id="practice-settings"></div>
   <div id="clubs-settings"></div>
   <div id="finder-settings"></div>
   <h2>バックアップ</h2>
@@ -50,6 +52,7 @@ export function setupSettingsView(root) {
   // 設定タブの中身（マイクラブ・補正・最後にバックアップした日）と上のお知らせを新しくする
   async function refresh() {
     await renderTargetSettings($('target-settings'));
+    await renderPracticeSettings($('practice-settings'));
     await renderClubsSettings($('clubs-settings'));
     await renderFinderSettings($('finder-settings'));
     const meta = await getMeta();

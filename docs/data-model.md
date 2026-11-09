@@ -35,6 +35,8 @@
 | `elevationUp` / `elevationDown` | 早見表の高低差の補正。1mにつき何ヤード足す（打ち上げ）・引く（打ち下ろし）か（初期値 `1.0`） |
 | `lastDistancePlace` | 飛距離の記録で前回選んだ場所 |
 | `targetScore` | 弱点分析の目標スコア（パー72のコースでのスコア。初期値 `100`） |
+| `practiceShares` | 練習メニューの配分（%）`{ main: 60, second: 20, warmupFinish: 20 }` |
+| `lastPracticePlace` / `lastPracticeUnit` / `lastPracticeAmount` | 練習メニューで前回選んだ場所・単位・量 |
 
 - まだ保存していない項目は `js/features/settings/settings-store.js` の初期値を使う（項目を足しても移行は要らない）
 
@@ -123,8 +125,24 @@
 | 項目 | 意味 |
 |---|---|
 | `date` | 日付 |
-| `items` | 項目 `[{ title: "50ydのアプローチ", balls: 30, done: true, reason: "…" }]`。`reason` は提案した理由（どの弱点から出したか） |
+| `place` | 場所。値: `range`（打ちっぱなし）/ `green`（パター練習場）/ `home`（自宅） |
+| `unit` / `amount` | 量の単位（`balls`=球数 / `minutes`=分）と量 |
+| `status` | 値: `planned`（練習中）/ `done`（記録した） |
+| `mainLabel` / `secondLabel` | 一番・2番目の課題の名前（メニューを作ったときのもの） |
+| `items` | ドリルごと `[{ drillId, drillName, topic, block, amount, reason, rating }]`（v4〜）。`drillName` はドリルの名前を写したもの（ドリルを消しても残る）。`block`: `warmup`/`main`/`second`/`finish`。`rating`: 手応え1〜5（未入力は `null`） |
 | `note` | メモ |
+
+### `drills`（ドリル集。v4〜）
+| 項目 | 意味 |
+|---|---|
+| `id` | 最初のドリルは `drv-1` などの決まった名前、自分で足したドリルは `my-…` |
+| `topic` | 課題。値: `driver` / `iron` / `approach` / `bunker` / `longPutt` / `shortPutt` / `warmup` / `finish` |
+| `name` / `how` / `points` | 名前・やり方・意識するポイント |
+| `balls` / `minutes` | 球数の目安・時間の目安（分） |
+| `places` | できる場所の一覧（`range` / `green` / `home`） |
+| `isDefault` | 最初のドリル集から入れたものなら `true` |
+
+- 最初のドリル集は `js/features/practice/drill-data.js`。初めて開いたときと v4 への移行で入れる。「最初のドリル集に戻す」で入れ直す
 
 ### `swingVideos`（スイング動画）
 | 項目 | 意味 |
@@ -187,3 +205,6 @@
   - `distanceRecords` の `source`（`range`/`round`/`monitor`）→ `place`（`range`/`course`）。`monitor` は `range` に、`round` は `course` にする
   - `distanceRecords` に `isMiss`（`false`）を追加
   - クラブが1本もなければ、よくある14本を入れる
+- v4（2026-11-09、機能4）: 練習メニュー
+  - ドリル集の棚 `drills` を追加（IndexedDB自体の版 `DB_VERSION` も 1 → 2）。1件もなければ最初の40個を入れる
+  - `practiceSessions` の `items` を `{ title, balls, done }` → `{ drillId, drillName, topic, block, amount, reason, rating }` に。`place`（`range`）・`unit`（`balls`）・`status`（`done`）・`note` を補う

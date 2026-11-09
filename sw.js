@@ -5,7 +5,7 @@
 //   上げないと、スマホに古いファイルが残ったままになる。
 // ★ファイルを足したら APP_FILES にも足す（テストで確かめている）。
 
-const APP_VERSION = '0.4.0';
+const APP_VERSION = '0.5.0';
 const CACHE_NAME = 'golf-app-' + APP_VERSION;
 
 const APP_FILES = [
@@ -56,6 +56,19 @@ const APP_FILES = [
   'js/features/analysis/analysis-view.js',
   'js/features/analysis/analysis-chart.js',
   'js/features/analysis/target-settings-view.js',
+  'js/features/practice/drill-data.js',
+  'js/features/practice/drill-model.js',
+  'js/features/practice/practice-rules.js',
+  'js/features/practice/practice-stats.js',
+  'js/features/practice/practice-store.js',
+  'js/features/practice/before-tab.js',
+  'js/features/practice/practice-menu-view.js',
+  'js/features/practice/practice-record-view.js',
+  'js/features/practice/drill-card.js',
+  'js/features/practice/drill-list-view.js',
+  'js/features/practice/drill-edit-view.js',
+  'js/features/practice/practice-review-view.js',
+  'js/features/practice/practice-settings-view.js',
   'js/features/settings/settings-view.js',
   'js/features/settings/backup-actions.js',
 ];

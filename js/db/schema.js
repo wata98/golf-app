@@ -4,8 +4,9 @@
 
 // 今のデータの形のバージョン
 // v1: 最初の形 / v2: ラウンドのホールの記録を機能1に合わせた / v3: 飛距離の記録を機能2に合わせた
+// v4: ドリル集（drills）を追加し、練習の記録を機能4に合わせた
 // （くわしくは docs/data-model.md の「変更の履歴」）
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 // アプリの名前。バックアップのファイルに入れて、別のアプリのファイルと区別する
 export const APP_ID = 'golf-app';
@@ -21,6 +22,7 @@ export const DATA_STORES = [
   'rounds',
   'shots',
   'practiceSessions',
+  'drills',
   'swingVideos',
   'availabilitySearches',
 ];

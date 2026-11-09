@@ -3,6 +3,7 @@
 
 import { SCHEMA_VERSION, DATA_STORES } from './schema.js';
 import { defaultClubs } from '../features/clubs/club-model.js';
+import { defaultDrillRecords } from '../features/practice/drill-model.js';
 
 // 移行処理の一覧。キーは「移行したあとのバージョン」。
 // 例: 2: (data) => { ...v1の形をv2の形に直して返す... }
@@ -29,7 +30,40 @@ export const MIGRATIONS = {
     distanceRecords: (data.distanceRecords || []).map(migrateDistanceV3),
     clubs: (data.clubs || []).length ? data.clubs : defaultClubs(new Date()),
   }),
+
+  // v3 → v4: 練習メニュー（機能4）
+  //  - ドリル集（drills）がなければ、最初のドリル集を入れる
+  //  - 練習の記録の形を機能4に合わせる（最初の形の title / balls を drillName / amount にする）
+  4: (data) => ({
+    ...data,
+    // アプリの中での移行では、棚は作られた直後で空（[]）なので「1件もなければ」で判定する
+    drills: (data.drills || []).length ? data.drills : defaultDrillRecords(new Date()),
+    practiceSessions: (data.practiceSessions || []).map(migratePracticeV4),
+  }),
 };
+
+function migratePracticeV4(session) {
+  return {
+    ...session,
+    place: session.place ?? 'range',
+    unit: session.unit ?? 'balls',
+    status: session.status ?? 'done',
+    note: session.note ?? '',
+    items: (session.items || []).map((item) => {
+      const { title, balls, done, ...rest } = item;
+      return {
+        ...rest,
+        drillId: rest.drillId ?? null,
+        drillName: rest.drillName ?? title ?? '',
+        topic: rest.topic ?? null,
+        block: rest.block ?? 'main',
+        amount: rest.amount ?? balls ?? 0,
+        reason: rest.reason ?? '',
+        rating: rest.rating ?? null,
+      };
+    }),
+  };
+}
 
 const SOURCE_TO_PLACE = { range: 'range', monitor: 'range', round: 'course' };
 

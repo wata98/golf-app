@@ -84,6 +84,22 @@ test('v1 のデータは v2、v3 と順に移行される', () => {
   assert.equal(out.clubs.length, 14);
 });
 
+test('v3→v4: ドリル集がなければ40個入れる。練習の記録を新しい形にする', () => {
+  const v3 = {
+    practiceSessions: [{ id: 'p', date: '2026-10-01', items: [{ title: '50ydのアプローチ', balls: 30, done: true, reason: '寄らない' }] }],
+  };
+  const out = migrateData(v3, 3);
+  assert.equal(out.drills.length, 40);
+  const s = out.practiceSessions[0];
+  assert.deepEqual([s.place, s.unit, s.status, s.note], ['range', 'balls', 'done', '']);
+  assert.deepEqual(s.items[0], { drillId: null, drillName: '50ydのアプローチ', topic: null, block: 'main', amount: 30, reason: '寄らない', rating: null });
+});
+
+test('v3→v4: ドリル集がすでにあれば、そのまま', () => {
+  const out = migrateData({ drills: [{ id: 'my-1', topic: 'iron' }] }, 3);
+  assert.deepEqual(out.drills, [{ id: 'my-1', topic: 'iron' }]);
+});
+
 test('アプリより新しい版のデータはエラー', () => {
   assert.throws(() => migrateData({}, SCHEMA_VERSION + 1), /新しい版のアプリ/);
 });
