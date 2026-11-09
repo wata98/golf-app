@@ -5,7 +5,7 @@
 //   上げないと、スマホに古いファイルが残ったままになる。
 // ★ファイルを足したら APP_FILES にも足す（テストで確かめている）。
 
-const APP_VERSION = '0.7.0';
+const APP_VERSION = '0.8.0';
 const CACHE_NAME = 'golf-app-' + APP_VERSION;
 
 const APP_FILES = [
@@ -88,7 +88,21 @@ const APP_FILES = [
   'vendor/leaflet.css',
   'js/features/settings/settings-view.js',
   'js/features/settings/backup-actions.js',
+  'js/db/image-codec.js',
+  'js/features/swing/swing-math.js',
+  'js/features/swing/swing-rules.js',
+  'js/features/swing/pose-loader.js',
+  'js/features/swing/swing-analyzer.js',
+  'js/features/swing/swing-draw.js',
+  'js/features/swing/swing-store.js',
+  'js/features/swing/swing-format.js',
+  'js/features/swing/swing-analyze-view.js',
+  'js/features/swing/swing-result-view.js',
+  'js/features/swing/swing-guide.js',
+  'js/features/swing/swing-tab.js',
+  'js/features/swing/swing-settings-view.js',
 ];
+// ※ vendor/mediapipe/ はここに入れない（下の MEDIAPIPE_CACHE で、使ったときに保存する）
 
 // 新しい版が来たら、ファイルをまとめて保存する
 self.addEventListener('install', (event) => {
@@ -108,11 +122,29 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// 骨格推定の部品（vendor/mediapipe/、約25MB）は、アプリの更新のたびに読み直さないよう、別の保存場所に置く。
+// 初めて使うときにネットから読んで保存し、2回目からは圏外でも使える。MediaPipe の版を上げたら名前を変える
+const MEDIAPIPE_CACHE = 'golf-mediapipe-1.2.2';
+
+function fromMediaPipeCache(request) {
+  return caches.open(MEDIAPIPE_CACHE).then(async (cache) => {
+    const hit = await cache.match(request, { ignoreSearch: true });
+    if (hit) return hit;
+    const res = await fetch(request);
+    if (res.ok) await cache.put(request, res.clone());
+    return res;
+  });
+}
+
 // ファイルを読むときは、まずスマホに保存したものを使う。なければネットから読む。
 // 楽天GORAなど外部への通信（機能6）はここを通さない。
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (event.request.method !== 'GET' || url.origin !== self.location.origin) return;
+  if (url.pathname.includes('/vendor/mediapipe/')) {
+    event.respondWith(fromMediaPipeCache(event.request));
+    return;
+  }
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true }).then((hit) => hit || fetch(event.request))
   );

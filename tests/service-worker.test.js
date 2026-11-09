@@ -36,7 +36,8 @@ test('APP_FILES に書いたファイルが全部ある', () => {
 
 test('js・css・icons・vendor のファイルが全部 APP_FILES に入っている（入れ忘れるとオフラインで開けない）', () => {
   const listed = new Set(appFiles());
-  const vendorJs = listFiles('vendor').filter((f) => f.endsWith('.js'));
+  // vendor/mediapipe/ は大きいので、使ったときに別の保存場所へ入れる（APP_FILES には入れない）
+  const vendorJs = listFiles('vendor').filter((f) => f.endsWith('.js') && !f.startsWith('vendor/mediapipe/'));
   for (const f of [...listFiles('js'), ...listFiles('css'), ...listFiles('icons'), ...vendorJs]) {
     assert.ok(listed.has(f), `${relative('.', f)} を sw.js の APP_FILES に足してください`);
   }

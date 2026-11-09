@@ -147,16 +147,20 @@
 
 - 最初のドリル集は `js/features/practice/drill-data.js`。初めて開いたときと v4 への移行で入れる。「最初のドリル集に戻す」で入れ直す
 
-### `swingVideos`（スイング動画）
+### `swingVideos`（スイングの解析。v6〜。棚の名前は最初の設計のままだが、**動画は保存しない**）
 | 項目 | 意味 |
 |---|---|
 | `date` | 撮った日 |
+| `view` | 撮影方向。値: `front`（正面）/ `behind`（飛球線後方） |
 | `clubId` | クラブ（任意） |
-| `view` | 撮った向き。値: `front`（正面）/ `back`（後方） |
-| `video` | 動画本体（IndexedDBにBlobで保存。**JSON書き出しには入れない**） |
-| `annotations` | 描いた線・角度 `[{ type: "line" or "angle", time: 1.25, points: [{x,y}, …] }]`。座標は動画の幅・高さに対する割合（0〜1）で持ち、画面の大きさが変わってもずれないようにする |
-| `autoMeasurements` | 自動計測の結果（機能7の後半で中身を決める。最初は空） |
+| `handedness` / `heightCm` | 解析したときの利き手（`right`/`left`）と身長（cm、なければ `null`） |
+| `phases` | 4つの場面 `{ address, top, impact, finish }`。それぞれ `{ t: 秒, image: 静止画（JPEG の Blob）, landmarks: 骨格の33点 [{ x, y, visibility }]（画像に対する割合0〜1） }`。骨格の線は表示するときに重ねる |
+| `autoPhases` | 自動で見つけた場面の時刻（手直しの前） |
+| `metrics` | 数値 `[{ key, label, value, unit, note }]`。`value` が `null` は「測れず」、`note: '目安'` は平面の動画ではずれやすいもの |
+| `duration` / `sampleFps` / `slow` | 動画の長さ・解析したコマの数（1秒あたり）・端末が遅くて画像を小さくしたか |
 | `note` | メモ |
+
+- バックアップのJSONでは、静止画を `data:image/jpeg;base64,…` の文字にして入れる（`js/db/image-codec.js`）。読み込むときに Blob に戻す。1回の解析で約0.2〜0.4MB
 
 ### `availabilitySearches`（空き確認でよく使う条件）
 | 項目 | 意味 |
@@ -187,7 +191,7 @@
   }
 }
 ```
-- 全部の棚を入れる。ただし `swingVideos` の `video`（動画本体）は大きいので入れない。動画の元ファイルは写真アプリに残しておく
+- 全部の棚を入れる。スイングの静止画は文字（base64）にして入れる（v6〜。動画はもともと保存しない）
 - 楽天のアプリID・アクセスキー（`settings` の `rakutenAppId` / `rakutenAccessKey`）は入れない（楽天の規約で他人に知られてはいけないため。機能6で決定）
 - 読み込むときは `schemaVersion` を見て、古ければ移行処理を通してから保存する。新しすぎる（アプリより先の版の）ファイルは読み込まずに知らせる
 - 読み込みは「今のデータを全部置き換える」。置き換える前に今のデータを `backups` に自動で保存する
@@ -214,3 +218,6 @@
 - v5（2026-11-09、機能5）: コースマネジメント
   - `holeNotes` をティーごと（`id` = `ゴルフ場|ティー|ホール`）にし、`hazards` と `plan` を持たせる。最初の形の `note` / `teeClubId` / `aim` は `plan` に移す（ティーはそのゴルフ場の最初のティー）
   - `courses` に `greens`（`[]`）を追加
+- v6（2026-11-09、機能7）: スイング解析
+  - `swingVideos` から `video` / `annotations` / `autoMeasurements` を消し、`handedness`（`right`）・`phases`（`{}`）・`metrics`（`[]`）・`note` を足す
+  - `settings` に `swingHandedness`（`right`）・`heightCm`（`null`）を足す（初期値があるので移行は不要）

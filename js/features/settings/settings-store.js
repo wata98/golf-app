@@ -22,6 +22,9 @@ export const DEFAULT_SETTINGS = {
   elevationDown: DEFAULT_ELEVATION_DOWN,
   // 飛距離の記録で前回選んだ場所
   lastDistancePlace: 'range',
+  // スイング解析（機能7）: 利き手（'right' 右打ち / 'left' 左打ち）と身長（cm。cm の目安を出すのに使う。なければ null）
+  swingHandedness: 'right',
+  heightCm: null,
   // 弱点分析の目標スコア（パー72のコースでのスコア）
   targetScore: 100,
   // 練習メニューの配分（%）: 一番の課題・2番目の課題・ウォームアップと仕上げ

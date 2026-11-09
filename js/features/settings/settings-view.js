@@ -11,6 +11,7 @@ import { renderFinderSettings } from '../distance/finder-settings-view.js';
 import { renderTargetSettings } from '../analysis/target-settings-view.js';
 import { renderPracticeSettings } from '../practice/practice-settings-view.js';
 import { renderAvailabilitySettings } from '../availability/availability-settings-view.js';
+import { renderSwingSettings } from '../swing/swing-settings-view.js';
 
 const HTML = `
   <div id="target-settings"></div>
@@ -18,6 +19,7 @@ const HTML = `
   <div id="clubs-settings"></div>
   <div id="finder-settings"></div>
   <div id="availability-settings"></div>
+  <div id="swing-settings"></div>
   <h2>バックアップ</h2>
   <div class="info-box">
     <div>最後にバックアップした日</div>
@@ -58,6 +60,7 @@ export function setupSettingsView(root) {
     await renderClubsSettings($('clubs-settings'));
     await renderFinderSettings($('finder-settings'));
     await renderAvailabilitySettings($('availability-settings'));
+    await renderSwingSettings($('swing-settings'));
     const meta = await getMeta();
     const last = meta && meta.lastExportedAt;
     const days = last ? daysSince(last, new Date()) : 0;
@@ -68,9 +71,12 @@ export function setupSettingsView(root) {
   }
 
   $('export-button').addEventListener('click', async () => {
-    showStatus('');
+    showStatus('バックアップのファイルを作っています…');
     try {
-      if (await exportBackup()) showStatus('バックアップを保存しました。');
+      const r = await exportBackup();
+      if (r === 'again') showStatus('ファイルの準備ができました。もう一度「バックアップを保存」を押してください。');
+      else if (r) showStatus('バックアップを保存しました。');
+      else showStatus('');
       await refresh();
     } catch (err) {
       showStatus('保存できませんでした: ' + err.message, true);

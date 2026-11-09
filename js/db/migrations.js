@@ -66,6 +66,17 @@ export const MIGRATIONS = {
       }),
     };
   },
+
+  // v5 → v6: スイング解析（機能7）
+  //  - 動画は保存しない形にする（video / annotations / autoMeasurements を消す）
+  //  - 4つの場面（phases）・数値（metrics）・利き手・メモを持たせる
+  6: (data) => ({
+    ...data,
+    swingVideos: (data.swingVideos || []).map((s) => {
+      const { video, annotations, autoMeasurements, ...rest } = s;
+      return { ...rest, handedness: rest.handedness ?? 'right', phases: rest.phases ?? {}, metrics: rest.metrics ?? [], note: rest.note ?? '' };
+    }),
+  }),
 };
 
 function migratePracticeV4(session) {

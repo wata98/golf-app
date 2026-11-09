@@ -49,11 +49,10 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
   - キーが未入力のときは、予約サイトを開くリンクだけを表示する
   - **1人予約は自動取得しない**（公式APIがなく、各サイトの規約に反するおそれ。ユーザー承認済み）。条件入りで各サイトの1人予約検索ページを開くボタンにする
   - 調査結果は `docs/research-availability.md`、動かなくなったときの直し方は `docs/availability-troubleshooting.md`
-- 機能7（スイング動画解析）
-  - まずは手動: コマ送り・スロー再生・画面に線や角度を描く
-  - あとから自動を足す: スマホの中で動く無料の骨格推定（Google の MediaPipe）で頭の位置などを測る。
-    ネットに動画を送らない。判定はルールで行う
-  - 自動を足しても手動の機能・保存データはそのまま使えるようにする
+- 機能7（スイング動画解析）（作成済み。ユーザーの依頼で「自動推定＋手動の手直し」にした）
+  - 骨格推定は MediaPipe（同梱）。スマホの中だけで処理し、動画を外に送らない。判定と数値はルール（`swing-rules.js`）
+  - 動画は保存しない。4つの場面の静止画・骨格の点・数値だけを保存する（バックアップのJSONにも静止画を入れる）
+  - 2Dの動画で正確に測れないもの（回転の角度・クラブの動き）は出さない。ずれやすいものは「目安」と書く
 
 ## 画面のルール
 - すべて日本語
@@ -81,7 +80,8 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
 - ライブラリは下のものだけ。どれもネットから読まずリポジトリに同梱する（オフラインで動かすため）
   - Chart.js 4.6.1（グラフ。`vendor/chart.umd.min.js`。機能2で入れた。取得元などは `vendor/README.md`）
   - Leaflet 1.9.4（地図。`vendor/leaflet.js`・`leaflet.css`。機能5でグリーンの位置の登録に使う）
-  - MediaPipe（骨格推定。機能7の自動計測を足すときに入れる）
+  - MediaPipe Tasks Vision 1.2.2 と Pose Landmarker（full）モデル（骨格推定。`vendor/mediapipe/`、約25MB。機能7で入れた）
+    - アプリのファイル一覧（`sw.js` の `APP_FILES`）には入れず、使ったときに `MEDIAPIPE_CACHE` に保存する（更新のたびに25MBを読み直さないため）
 - 地図の写真は国土地理院の「地理院タイル」。出典「国土地理院」と一覧ページへのリンク、「© Axelspace」を必ず表示する（利用条件は `docs/decisions.md`）
   - 他のライブラリを足すときは、必ずユーザーに理由を説明して承認を得る
 - テストはNode.jsに最初から付いているテスト機能（`node --test`）。テスト用ライブラリは入れない
@@ -142,6 +142,12 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
   - `gora-api.js` 楽天GORAプラン検索APIへの問い合わせ（接続先 `API_URL`・条件の作り方・返事の読み方・1秒あける）
   - `gora-errors.js` エラーを日本語に / **`site-links.js` 各サイトを条件入りで開くURL（サイトの形が変わったらここだけ直す）**
   - `availability-view.js` 条件の入力 / `availability-results.js` 結果と「もっと見る」 / `availability-settings-view.js` キーの入力・接続を試す
+- `js/features/swing/` 機能7 スイング解析（「振り返り」の「スイング」と、設定の「スイング解析」）
+  - **`swing-rules.js` 場面の決め方と数値の出し方（判定のルール。基準の数字は先頭）**
+  - `swing-math.js` 骨格の点・角度・距離 / `pose-loader.js` MediaPipe の読み込み / `swing-analyzer.js` 動画からコマを取り出して推定
+  - `swing-analyze-view.js` 解析・場面の手直し・保存 / `swing-result-view.js` 結果と比較 / `swing-tab.js` 一覧 / `swing-guide.js` 撮り方
+  - `swing-draw.js` 骨格の線 / `swing-format.js` 数値の表示 / `swing-store.js` 保存 / `swing-settings-view.js` 利き手・身長
+- `js/db/image-codec.js` バックアップの静止画の変換（Blob ⇔ 文字）
 - `js/ui/chart-loader.js` グラフの部品（Chart.js）の読み込み
 - `js/features/settings/settings-store.js` 設定の読み書きと初期値
 - `vendor/` 同梱しているライブラリ（書き換えない）

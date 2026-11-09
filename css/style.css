@@ -327,6 +327,15 @@ details summary { min-height: 48px; padding: 10px 0; }
 .plan-card .link-button { min-height: 52px; font-size: 17px; margin-bottom: 0; }
 .credit { text-align: right; }
 
+/* ===== スイング解析 ===== */
+.file-button { display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.phase-card { border: 3px solid var(--line); border-radius: 10px; padding: 6px; text-align: center; }
+.phase-card canvas, .swing-still { display: block; width: 100%; height: auto; margin: 4px 0; border-radius: 6px; }
+.compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.swing-item .thumb canvas { width: 54px; height: auto; border-radius: 4px; }
+.swing-table td:first-child { font-size: 15px; }
+
 /* 確認の画面 */
 dialog {
   width: min(92vw, 480px);
