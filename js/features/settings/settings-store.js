@@ -7,7 +7,12 @@ import { DEFAULT_ELEVATION_UP, DEFAULT_ELEVATION_DOWN } from '../distance/club-f
 import { DEFAULT_SHARES } from '../practice/practice-rules.js';
 
 export const DEFAULT_SETTINGS = {
+  // 楽天ウェブサービスのアプリIDとアクセスキー（機能6）。他人に知られてはいけないので、
+  // コードに書かず、バックアップのJSONにも入れない（js/db/backup-format.js の SECRET_SETTINGS）
   rakutenAppId: '',
+  rakutenAccessKey: '',
+  // 空き確認で前回使った条件（なければ availability-view.js の初期値）
+  lastAvailability: null,
   homePrefecture: '',
   // 飛距離の集計の条件（振り返りと早見表で共通）
   distanceExcludeMiss: true,

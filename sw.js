@@ -5,7 +5,7 @@
 //   上げないと、スマホに古いファイルが残ったままになる。
 // ★ファイルを足したら APP_FILES にも足す（テストで確かめている）。
 
-const APP_VERSION = '0.6.0';
+const APP_VERSION = '0.7.0';
 const CACHE_NAME = 'golf-app-' + APP_VERSION;
 
 const APP_FILES = [
@@ -78,6 +78,12 @@ const APP_FILES = [
   'js/features/course/green-map-view.js',
   'js/features/course/gps.js',
   'js/features/course/round-plan.js',
+  'js/features/availability/site-links.js',
+  'js/features/availability/gora-errors.js',
+  'js/features/availability/gora-api.js',
+  'js/features/availability/availability-view.js',
+  'js/features/availability/availability-results.js',
+  'js/features/availability/availability-settings-view.js',
   'vendor/leaflet.js',
   'vendor/leaflet.css',
   'js/features/settings/settings-view.js',

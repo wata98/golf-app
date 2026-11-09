@@ -28,7 +28,8 @@
 | 項目 | 意味 |
 |---|---|
 | `id` | 常に `"main"` |
-| `rakutenAppId` | 楽天のアプリID（機能6。未入力なら空文字。コードには書かない） |
+| `rakutenAppId` / `rakutenAccessKey` | 楽天ウェブサービスのアプリIDとアクセスキー（機能6。未入力なら空文字）。コードに書かない。**バックアップのJSONには入れない**（`backup-format.js` の `SECRET_SETTINGS`）。復元しても今のスマホのキーを残す |
+| `lastAvailability` | 空き確認で前回使った条件 `{ startDate, days, players, prefs, budget, times, sort, twoSum }` |
 | `homePrefecture` | よく行く地域（空き確認の初期値） |
 | `distanceExcludeMiss` | 飛距離の集計でミスショットを除くか（初期値 `true`。振り返りと早見表で共通） |
 | `distanceRecentOnly` | 飛距離の集計を直近90日だけにするか（初期値 `false`） |
@@ -187,7 +188,7 @@
 }
 ```
 - 全部の棚を入れる。ただし `swingVideos` の `video`（動画本体）は大きいので入れない。動画の元ファイルは写真アプリに残しておく
-- `rakutenAppId` を入れるかは機能6を作るときにユーザーに確認する
+- 楽天のアプリID・アクセスキー（`settings` の `rakutenAppId` / `rakutenAccessKey`）は入れない（楽天の規約で他人に知られてはいけないため。機能6で決定）
 - 読み込むときは `schemaVersion` を見て、古ければ移行処理を通してから保存する。新しすぎる（アプリより先の版の）ファイルは読み込まずに知らせる
 - 読み込みは「今のデータを全部置き換える」。置き換える前に今のデータを `backups` に自動で保存する
 

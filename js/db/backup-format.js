@@ -5,13 +5,35 @@ import { APP_ID, SCHEMA_VERSION, DATA_STORES } from './schema.js';
 import { migrateData } from './migrations.js';
 import { toLocalIso } from '../core/dates.js';
 
+// バックアップに入れない設定（楽天ウェブサービスのアプリIDとアクセスキー）。
+// 楽天の規約で他人に知られてはいけないので、ファイルを人に渡したり置き忘れたりしても漏れないようにする
+export const SECRET_SETTINGS = ['rakutenAppId', 'rakutenAccessKey'];
+
+function withoutSecrets(row) {
+  const out = { ...row };
+  for (const k of SECRET_SETTINGS) delete out[k];
+  return out;
+}
+
+// 復元のとき: バックアップにはキーが入っていないので、今スマホに入っているキーを残す
+export function keepSecrets(data, currentSettingsRows) {
+  const current = (currentSettingsRows || []).find((r) => r.id === 'main');
+  if (!current) return data;
+  const secrets = Object.fromEntries(SECRET_SETTINGS.filter((k) => current[k]).map((k) => [k, current[k]]));
+  const rows = data.settings?.length ? data.settings : [{ id: 'main' }];
+  return { ...data, settings: rows.map((r) => (r.id === 'main' ? { ...r, ...secrets } : r)) };
+}
+
 // 全データからバックアップのJSONの中身を作る。
 // 動画本体（swingVideos の video）は大きいので入れない（docs/data-model.md）。
+// 楽天のアプリID・アクセスキーも入れない（SECRET_SETTINGS）。
 export function buildBackup(data, now) {
   const out = {};
   for (const name of DATA_STORES) {
     const rows = Array.isArray(data[name]) ? data[name] : [];
-    out[name] = name === 'swingVideos' ? rows.map(withoutVideo) : rows;
+    if (name === 'swingVideos') out[name] = rows.map(withoutVideo);
+    else if (name === 'settings') out[name] = rows.map(withoutSecrets);
+    else out[name] = rows;
   }
   return {
     app: APP_ID,

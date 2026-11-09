@@ -1,7 +1,7 @@
 // バックアップの保存（ファイルに書き出す）と復元（ファイルから読み込む）
 
-import { readAllData, replaceAllData, saveSnapshot, updateMeta } from '../../db/database.js';
-import { buildBackup, backupFileName, parseBackup } from '../../db/backup-format.js';
+import { readAllData, replaceAllData, saveSnapshot, updateMeta, getAll } from '../../db/database.js';
+import { buildBackup, backupFileName, parseBackup, keepSecrets } from '../../db/backup-format.js';
 import { toLocalIso } from '../../core/dates.js';
 
 // 全データをJSONファイルにして渡す。
@@ -47,8 +47,9 @@ export async function readBackupFile(file) {
   return parseBackup(text);
 }
 
-// 確認がとれたあとに呼ぶ。今のデータを控えてから、全部置き換える
+// 確認がとれたあとに呼ぶ。今のデータを控えてから、全部置き換える。
+// 楽天のアプリID・アクセスキーはバックアップに入っていないので、今スマホに入っているものを残す
 export async function restoreBackup(data) {
   await saveSnapshot('import');
-  await replaceAllData(data);
+  await replaceAllData(keepSecrets(data, await getAll('settings')));
 }
