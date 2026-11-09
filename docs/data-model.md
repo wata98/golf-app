@@ -86,12 +86,16 @@
 | 項目 | 意味 |
 |---|---|
 | `number` / `par` / `yards` | ホール番号・パー・距離（ゴルフ場の情報を写しておく。後でゴルフ場を直しても過去のラウンドは変わらない） |
-| `strokes` | 打数（**これが正**。未入力は `null`） |
-| `putts` | パット数 |
-| `fairway` | ティーショット。値: `hit` / `left` / `right` / `none`（パー3など） |
-| `gir` | パーオンしたら `true` |
+| `strokes` | 打数（**これが正**。未入力は `null`。`null` のホールは集計に入れない） |
+| `putts` | パット数（未入力は `null`） |
+| `teeShot` | ティーショット（v2〜）。パー4・5: `fairway` / `leftRough` / `rightRough` / `bunker` / `ob` / `penalty`。パー3: `green`（乗った）/ `missedGreen`（乗らなかった）。未選択は `null` |
 | `penalties` | ペナルティの打数 |
 | `bunkers` | バンカーに入った回数 |
+| `aroundGreen` | グリーン周りから何打で上がったか（v2〜）。`1`〜`4`（4は「4以上」）。未選択・パーオンしたホールは `null` |
+| `note` | 一言メモ（v2〜） |
+
+- パーオンは保存しない。（打数 − パット数）が（パー − 2）以下ならパーオンとして毎回計算する
+- ラウンドには `courseName`（ゴルフ場名を写したもの。一覧ですぐ出すため）と `currentHole`（記録中に開いていたホール。再開に使う）も持たせる
 
 ### `shots`（1打ごと。記録は任意）
 | 項目 | 意味 |
@@ -163,3 +167,8 @@
 
 ## 変更の履歴
 - v1（2026-11-09）: 最初の形
+- v2（2026-11-09、機能1）: ラウンドの各ホールの記録を変更
+  - `fairway`（`hit`/`left`/`right`/`none`）→ `teeShot`（`fairway`/`leftRough`/`rightRough`/`null`）に置き換え
+  - `gir` を削除（毎回計算する）
+  - `aroundGreen`（`null`）と `note`（空文字）を追加
+  - ラウンドに `courseName` と `currentHole` を持たせる（v1のデータにはないことがあるので、ない前提でも動くようにする）

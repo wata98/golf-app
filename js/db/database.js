@@ -64,6 +64,34 @@ export async function updateMeta(changes) {
   await done(tx);
 }
 
+// 1つの棚の全部の記録を読む
+export async function getAll(storeName) {
+  const db = await openDatabase();
+  return wait(db.transaction(storeName).objectStore(storeName).getAll());
+}
+
+// 1件読む（なければ undefined）
+export async function getOne(storeName, id) {
+  const db = await openDatabase();
+  return wait(db.transaction(storeName).objectStore(storeName).get(id));
+}
+
+// 1件保存する（同じ id があれば上書き）。更新日時を入れる
+export async function putOne(storeName, row) {
+  const db = await openDatabase();
+  const tx = db.transaction(storeName, 'readwrite');
+  tx.objectStore(storeName).put({ ...row, updatedAt: toLocalIso(new Date()) });
+  await done(tx);
+}
+
+// 1件消す
+export async function deleteOne(storeName, id) {
+  const db = await openDatabase();
+  const tx = db.transaction(storeName, 'readwrite');
+  tx.objectStore(storeName).delete(id);
+  await done(tx);
+}
+
 // 全部の棚のデータを読む
 export async function readAllData() {
   const db = await openDatabase();

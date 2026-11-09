@@ -110,8 +110,13 @@ iPhoneのホーム画面に追加して使うPWA（インストール不要のWe
 - `js/core/dates.js` 日付の計算（バックアップのお知らせの30日）
 - `js/db/schema.js` データの版・棚の一覧 / `js/db/migrations.js` 移行処理
 - `js/db/backup-format.js` バックアップJSONの作成と確認 / `js/db/database.js` IndexedDBの読み書き
-- `js/ui/` タブ切り替え・お知らせ
+- `js/ui/` タブ切り替え・お知らせ・画面の小道具（`html.js`: 文字の無害化 `esc()`・確認の画面）
 - `js/features/settings/` 設定タブ（バックアップの保存・復元）
+- `js/features/round/` 機能1 ラウンド成績記録（「ラウンド中」タブ）
+  - `round-stats.js` 集計の計算（パーオン判定・FWキープ率など） / `round-model.js` ラウンド・ゴルフ場の記録を作る・直す
+  - `round-store.js` 保存 / `round-tab.js` 画面の切り替え / `start-view.js` 開始 / `hole-view.js` ホール入力
+  - `hole-edit-dialog.js` パー・距離の修正 / `course-edit-view.js` ゴルフ場の一括編集 / `summary-view.js` 集計の表 / `swipe.js` スワイプ
+- `js/features/review/` 「振り返り」タブ（ラウンド一覧・詳細・修正・削除）
 - `js/features/<機能名>/` これから足す機能はここに1フォルダずつ
 - `tests/` 自動テスト（`*.test.js`）
 - `tools/` 開発用の道具（アプリには含まれない）

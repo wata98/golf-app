@@ -1,6 +1,7 @@
 // 画面下のタブの切り替え
+// onShow(tab): タブを開いたときに呼ばれる（中身を新しくするため）
 
-export function setupTabs() {
+export function setupTabs(onShow = () => {}) {
   const buttons = document.querySelectorAll('.tab-button');
   const panels = document.querySelectorAll('.tab-panel');
 
@@ -11,6 +12,7 @@ export function setupTabs() {
       else b.removeAttribute('aria-current');
     }
     window.scrollTo(0, 0);
+    onShow(tab);
   }
 
   for (const b of buttons) b.addEventListener('click', () => show(b.dataset.tab));

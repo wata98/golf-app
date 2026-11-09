@@ -3,7 +3,8 @@
 // （くわしくは docs/data-model.md）。
 
 // 今のデータの形のバージョン
-export const SCHEMA_VERSION = 1;
+// v1: 最初の形 / v2: ラウンドのホールの記録を機能1に合わせた（docs/data-model.md の「変更の履歴」）
+export const SCHEMA_VERSION = 2;
 
 // アプリの名前。バックアップのファイルに入れて、別のアプリのファイルと区別する
 export const APP_ID = 'golf-app';

@@ -5,7 +5,7 @@
 //   上げないと、スマホに古いファイルが残ったままになる。
 // ★ファイルを足したら APP_FILES にも足す（テストで確かめている）。
 
-const APP_VERSION = '0.1.0';
+const APP_VERSION = '0.2.0';
 const CACHE_NAME = 'golf-app-' + APP_VERSION;
 
 const APP_FILES = [
@@ -25,6 +25,18 @@ const APP_FILES = [
   'js/db/database.js',
   'js/ui/tabs.js',
   'js/ui/notice.js',
+  'js/ui/html.js',
+  'js/features/round/round-stats.js',
+  'js/features/round/round-model.js',
+  'js/features/round/round-store.js',
+  'js/features/round/round-tab.js',
+  'js/features/round/start-view.js',
+  'js/features/round/course-edit-view.js',
+  'js/features/round/hole-view.js',
+  'js/features/round/hole-edit-dialog.js',
+  'js/features/round/summary-view.js',
+  'js/features/round/swipe.js',
+  'js/features/review/review-tab.js',
   'js/features/settings/settings-view.js',
   'js/features/settings/backup-actions.js',
 ];
